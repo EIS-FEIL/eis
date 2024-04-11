@@ -1,0 +1,538 @@
+## -*- coding: utf-8 -*- 
+<%inherit file="baasplokk.mako"/>
+
+<%def name="block_edit()">
+<%
+  obj = c.block.meediaobjekt
+  tr_obj = c.lang and obj.tran(c.lang, False) or obj
+%>
+<script>
+  ${self.block_edit_js(obj)}
+</script>
+<% ch = h.colHelper('col-md-3 col-xl-2 text-md-right', 'col-md-3 col-xl-4') %>
+<div class="row mb-1">
+  <% name = 'mo.filedata' %>
+  ${ch.flb(_("Fail"), name)}
+  <div class="col-md-9 col-xl-10">
+    <%
+      files = []
+      if obj.has_file:
+         url = h.url('ylesanne_sisufail', id='%s.%s' % (obj.id, obj.fileext))
+         files.append((url, obj.filename, obj.filesize))
+         if c.lang and tr_obj and tr_obj.has_file:
+            url = h.url('ylesanne_sisufail', id='%s.%s' % (obj.id, tr_obj.fileext),lang=c.lang)
+            files.append((url, c.lang, tr_obj.filesize))      
+    %>
+    ${h.file('mo.filedata', value=_("Fail"), files=files)}
+  </div>
+</div>
+<div class="row">
+  <% name = 'mo.fileurl' %>
+  ${ch.flb(_("või URL"), name)}
+  <div class="col-md-9 col-xl-10">
+      % if c.lang:
+         ${h.lang_orig(obj.fileurl)}<br/>
+         ${h.lang_tag()}
+         ${h.text('mo.fileurl', obj.tran(c.lang).fileurl, size=80, maxlength=200, ronly=not c.is_tr)}
+      % else:
+         ${h.text('mo.fileurl', obj.tran(c.lang).fileurl, size=80, maxlength=200, ronly=not c.is_tr and not c.is_edit)}
+      % endif
+  </div>
+</div>
+<div class="row">
+  <% name = 'mo.tiitel' %>
+  ${ch.flb(_("Soovituslik pealkiri"), name)}
+  <div class="col-md-9 col-xl-10">
+    ${h.text('mo.tiitel', obj.tiitel)}
+  </div>
+</div>
+<div class="row mb-1">
+  <% name = 'mo.mimetype' %>
+  ${ch.flb(_("Liik"), name)}
+  <div class="col-md-3 col-xl-2">
+    ${h.select('mo.mimetype', obj.mimetype,  c.opt.mimetype_media_empty)}
+  </div>
+
+  <% name = 'mo.player' %>
+  ${ch.flb(_("Mängija"), name)}
+  <div class="col-md-3 col-xl-2">
+      ${h.radio('mo.player', model.Meediaobjekt.PLAYER_JPLAYER, checked=not obj.player, label='jPlayer')}
+      ${h.radio('mo.player', model.Meediaobjekt.PLAYER_HTML5, checked=obj.player, label=_("brauser"))}
+  </div>
+
+  <% playercls = 'player jplayer-audio jplayer-video video audio plmedia' %>
+  <% name = 'mo.autostart' %>
+  ${ch.flb(_("Autostart"), name, colextra=playercls)}
+  <div class="col-md-3 col-xl-2 ${playercls}">
+    ${h.checkbox('mo.autostart', True, checked=obj.autostart)}
+  </div>
+
+  <% playercls = 'player youtube jplayer-video video plmedia' %>
+  <% name = 'mo.laius' %>
+  ${ch.flb(_("Laius"), name, colextra=playercls)}
+  <div class="col-md-3 col-xl-2 ${playercls}">
+    ${h.posint5('mo.laius', obj.laius, maxvalue=900)}
+  </div>
+  <% name = 'mo.korgus' %>
+  ${ch.flb(_("Kõrgus"), name, colextra=playercls)}
+  <div class="col-md-3 col-xl-2 ${playercls}">
+    ${h.posint5('mo.korgus', obj.korgus)}
+  </div>
+
+  <% playercls = 'player jplayer-video video audio plmedia' %>
+  <% name = 'mo.isekorduv' %>
+  ${ch.flb(_("Tsükkel"), name, colextra=playercls)}
+  <div class="col-md-3 col-xl-2 ${playercls}">
+    ${h.checkbox('mo.isekorduv', True, checked=obj.isekorduv)}
+  </div>
+
+  <% playercls = 'player audio' %>
+  <% name = 'mo.nocontrols' %>
+  ${ch.flb(_("Ainult mängimise nupp"), name, colextra=playercls)}
+  <div class="col-md-3 col-xl-2 ${playercls}">
+    ${h.checkbox('mo.nocontrols', True, checked=obj.nocontrols)}
+  </div>
+
+  <% playercls = 'player plmedia audio jplayer-audio jplayer-video' %>
+  <% name = 'mo.max_kordus' %>
+  ${ch.flb(_("Max kuulamiste arv"), name, colextra=playercls)}
+  <div class="col-md-3 col-xl-2 ${playercls}">
+    ${h.int5('mo.max_kordus', obj.max_kordus)}
+  </div>
+
+  <% playercls = 'player plmedia audio jplayer-audio jplayer-video' %>
+  <% name = 'mo.pausita' %>
+  ${ch.flb(_("Pausi keelamine"), name, colextra=playercls)}
+  <div class="col-md-3 col-xl-2 ${playercls}">
+    ${h.checkbox('mo.pausita', True, checked=obj.pausita)}
+  </div>
+
+  <% playercls = 'player plmedia audio jplayer-audio jplayer-video' %>
+  <% name = 'mo.kpc_kood' %>
+  <% kpc = c.item.get_kysimus(seq=1) %>
+  ${ch.flb(_("Kuulamiste arvu loendur"), name, colextra=playercls)}
+  <div class="col-md-3 col-xl-2 ${playercls}">
+    ${h.text('mo.kpc_kood', kpc and kpc.kood or '', size=10, class_="identifier")}
+  </div>
+</div>
+</%def>
+
+<%def name="block_edit_js(obj)">
+$(function(){
+           $('select[name="mo.mimetype"]').change(mimetype_changed);
+           $('input[name="mo.player"]').click(player_changed);
+           player_changed();
+           mimetype_changed();
+});
+        function player_changed(){
+% if c.is_edit:
+           var mimetype = $('select[name="mo.mimetype"]').val();
+           var player = $('input[name="mo.player"]:checked').val();
+% else:
+           var mimetype = "${obj.mimetype}";
+           var player = "${obj.player}";
+% endif
+           var cls = '';
+           if(mimetype.match('^audio') && player == "${model.Meediaobjekt.PLAYER_JPLAYER}")
+              cls = 'jplayer-audio';
+           else if(mimetype.match('^audio'))
+              cls = 'audio';
+           else if(mimetype.match('^video') && player == "${model.Meediaobjekt.PLAYER_JPLAYER}")
+              cls = 'jplayer-video';
+           else //if(mimetype.match('^video'))
+              cls = 'video';                
+           $('.player').hide().filter('.' + cls).show();
+        };
+        function mimetype_changed(){
+% if c.is_edit:
+           var mimetype = $('select[name="mo.mimetype"]').val();
+% else:
+           var mimetype = "${obj.mimetype}";
+% endif
+           if(mimetype=="${const.MIMETYPE_AUDIO_MPEG}" || mimetype=="${const.MIMETYPE_VIDEO_MP4}")
+           {
+               $('.choose-player').show();
+               player_changed();
+           }
+           else
+           {
+              $('.choose-player').hide();
+              if(mimetype == "")
+              {
+                $('.player').hide();
+              }
+              else if(mimetype.match('flash'))
+              {
+                $('.player').hide().filter('.youtube').show();
+              }
+              else
+              {
+                $('.player').hide().filter('.plmedia').show();
+              }
+           }
+        }
+</%def>
+
+<%def name="block_print()">
+<p><i>${_("Multimeedia")}</i></p>
+</%def>
+
+<%def name="block_view()">
+  <% 
+     obj = c.block.meediaobjekt
+     tran = c.block.meediaobjekt.tran(c.lang) 
+     if tran.fileurl:
+        o_url = tran.fileurl
+     else:
+        o_url = obj.get_url(c.lang, c.url_no_sp)
+     MIMETYPES_WAV = ('audio/vnd.wave', 'audio/wav', 'audio/wave', 'audio/x-wav')
+
+     # kuulamiste loendur
+     kpc = c.block.get_kysimus(seq=1)
+     kpc_value = ''
+     if kpc and not (c.block.naide or c.block_correct):
+        kv = c.responses.get(kpc.kood)
+        if kv:
+           for ks in kv.kvsisud:
+              try:
+                  kpc_value = int(ks.sisu)
+              except:
+                  kpc_value = 0
+              break
+  %>
+% if kpc:
+  ${h.hidden('%s%s' % (const.RPREFIX, kpc.kood), kpc_value, class_="bmedia-kpc")}
+% endif
+  % if obj.is_youtube():
+<iframe title="YouTube video player" ${h.width(obj)} ${h.height(obj)}
+        src="${o_url}" 
+        frameborder="0" allowfullscreen></iframe>
+  ${h.origin(tran.tiitel)}
+
+  % elif obj.mimetype == const.MIMETYPE_AUDIO_MPEG and obj.is_jplayer:
+    ${self.play_mp3(obj, tran, o_url, kpc_value)}
+  % elif obj.mimetype == const.MIMETYPE_VIDEO_MP4 and obj.is_jplayer:
+    ${self.play_mp4(obj, tran, o_url, kpc_value)}
+  % elif obj.mimetype == const.MIMETYPE_AUDIO_MPEG:
+    ${self.play_audio(obj, tran, o_url, kpc_value)}
+  % elif obj.mimetype == const.MIMETYPE_VIDEO_MP4:
+    ${self.play_video(obj, tran, o_url, kpc_value)}
+  % elif obj.mimetype in MIMETYPES_WAV and not h.is_msie():
+##    ## IE HTML5 ei toeta .wav
+    ${self.play_audio(obj, tran, o_url, kpc_value)}
+  % else:
+    ${self.play_media(obj, tran, o_url, kpc_value)}
+  % endif
+</%def>
+
+
+<%def name="play_mp3(obj, tran, o_url, kpc_value)">
+  <div id="jquery_jplayer_${c.block_prefix}" class="jp-jplayer"></div>
+  <div id="jp_container_${c.block_prefix}" class="jp-audio" role="application" aria-label="plmedia player">
+    <div class="jp-type-single">
+      <div class="jp-gui jp-interface">
+        <div class="jp-volume-controls">
+          <button class="jp-mute" role="button" tabindex="0">mute</button>
+          <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+          <div class="jp-volume-bar">
+            <div class="jp-volume-bar-value"></div>
+          </div>
+        </div>
+        <div class="jp-controls-holder">
+          <div class="jp-controls">
+            <button class="jp-play" role="button" tabindex="0">play</button>
+            % if not obj.pausita:
+            <button class="jp-pause" role="button" tabindex="0">pause</button>            
+            % endif
+            % if obj.max_kordus is None:
+            <button class="jp-stop" role="button" tabindex="0">stop</button>
+            % endif            
+          </div>
+
+          <div class="jp-progress">
+            % if obj.max_kordus or obj.pausita:
+            <div class="jp-play-bar"></div>
+            % else:
+            <div class="jp-seek-bar">
+              <div class="jp-play-bar"></div>
+            </div>
+            % endif
+          </div>
+
+          <div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
+##          <div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
+        </div>
+      </div>
+      <div class="jp-details">
+        <div class="jp-title" aria-label="title">&nbsp;</div>
+      </div>
+      <div class="jp-no-solution">
+        <span>Update Required</span>
+        Vaja on uuemat brauserit
+      </div>
+    </div>
+  </div>
+<script>
+$(function(){
+   var jp = $("#jquery_jplayer_${c.block_prefix}");
+   jp.jPlayer({
+        ready: function () {
+% if obj.max_kordus is not None:
+          jp.find('audio').attr('max_play_count', ${obj.max_kordus});
+% endif
+% if obj.pausita:
+          ## kui paus keelatud, siis peidame play nupu, et ei arvataks, et see teeb pausi
+          var jpc = jp.closest('.eis-spbody').find('.jp-audio');
+          jpc.find('button.jp-play').addClass('hide-on-play');
+% endif
+% if obj.max_kordus is not None and kpc_value and kpc_value >= obj.max_kordus:
+          set_media_over(jp.find('audio'));
+% else:
+          $(this).jPlayer("setMedia", {
+              mp3: "${o_url}"
+          })
+   % if obj.autostart:
+          .jPlayer("play")
+   % endif
+          ;
+% endif
+        },
+        preload: "auto",
+        solution: "html",
+        cssSelectorAncestor: "#jp_container_${c.block_prefix}",
+        swfPath: "/jPlayer-2.9.2/jplayer",
+        supplied: "mp3",
+        autoBlur: false,
+        smoothPlayBar: true,
+        keyEnabled: true,
+        remainingDuration: false,
+        toggleDuration: false
+   });
+   % if obj.isekorduv:
+	  jp.jPlayer("play");
+   % endif
+   % if obj.max_kordus is not None or obj.pausita:
+    ## kui max kuulamiste arv on antud, siis ei lasta lahendajal kerida
+    jp.find('.jp-progress').unbind('click');
+   % endif
+   resized();
+});
+</script>
+</%def>
+
+<%def name="play_mp4(obj, tran, o_url, kpc_value)">
+  <div id="jp_container_${c.block_prefix}" class="jp-video" role="application" 
+       aria-label="media player">
+    <div class="jp-type-single">
+      <div id="jquery_jplayer_${c.block_prefix}" class="jp-jplayer"></div>
+      <div class="jp-gui">
+        <div class="jp-video-play">
+          <button class="jp-video-play-icon" role="button" tabindex="0">play</button>
+        </div>
+        <div class="jp-interface">
+          <div class="jp-progress">
+            % if obj.max_kordus or obj.pausita:
+            <div class="jp-play-bar"></div>
+            % else:
+            <div class="jp-seek-bar">
+              <div class="jp-play-bar"></div>
+            </div>
+            % endif
+          </div>
+          <div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
+          <div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
+          <div class="jp-details">
+            <div class="jp-title" aria-label="title">&nbsp;</div>
+          </div>
+          <div class="jp-controls-holder">
+            <div class="jp-volume-controls">
+              <button class="jp-mute" role="button" tabindex="0">mute</button>
+              <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+              <div class="jp-volume-bar">
+                <div class="jp-volume-bar-value"></div>
+              </div>
+            </div>
+            <div class="jp-controls">
+              <button class="jp-play" role="button" tabindex="0">play</button>
+              % if not obj.pausita:
+              <button class="jp-pause" role="button" tabindex="0">pause</button>
+              % endif
+              % if obj.max_kordus is None:
+              <button class="jp-stop" role="button" tabindex="0">stop</button>
+              % endif              
+            </div>
+% if False:
+            <div class="jp-toggles">
+              <button class="jp-repeat" role="button" tabindex="0">repeat</button>
+              <button class="jp-full-screen" role="button" tabindex="0">full screen</button>
+            </div>
+% endif
+          </div>
+        </div>
+      </div>
+
+      <div class="jp-no-solution">
+        <span>Update Required</span>
+        Vaja on uuemat brauserit
+      </div>
+    </div>
+  </div>
+<script>
+$(function(){
+   var jp = $("#jquery_jplayer_${c.block_prefix}");
+   jp.jPlayer({
+        ready: function () {
+% if obj.max_kordus is not None:
+          jp.find('video').attr('max_play_count', ${obj.max_kordus});
+% endif
+% if obj.pausita:
+          ## kui paus keelatud, siis peidame play nupu, et ei arvataks, et see teeb pausi
+          var jpc = jp.closest('.eis-spbody').find('.jp-video');
+          jpc.find('button.jp-play').addClass('hide-on-play');
+% endif
+% if obj.max_kordus is not None and kpc_value and kpc_value >= obj.max_kordus:
+          set_media_over(jp.find('video'));
+% else:
+          $(this).jPlayer("setMedia", {
+            m4v: "${o_url}"
+          })
+  % if obj.autostart:
+          .jPlayer("play")
+  % endif
+          ;
+% endif
+        },
+        preload: "auto",
+        solution: "html",
+        cssSelectorAncestor: "#jp_container_${c.block_prefix}",
+        swfPath: "/jPlayer-2.9.2/jplayer",
+        supplied: "m4v",
+        autoBlur: false,
+        smoothPlayBar: true,
+        keyEnabled: true,
+<%
+  # vaikimisi suurus on 480x270
+  # jPlayeri nupuriba laius on alati 480
+  dims = []
+  if obj.laius:
+     dims.append('width:%s' % obj.laius)
+  if obj.korgus:
+     dims.append('height:%s' % obj.korgus)
+%>
+% if dims:
+        size: {${','.join(dims)}},
+% endif
+        remainingDuration: true,
+        toggleDuration: true
+      });
+   % if obj.isekorduv:
+	  jp.jPlayer("play");
+   % endif
+
+   % if obj.max_kordus is not None or obj.pausita:
+    ## kui max kuulamiste arv on antud, siis ei lasta lahendajal kerida
+    jp.unbind('click');
+    jp.find('video')
+      .on('contextmenu', function(){return false;})
+      .on('selectstart', function(){return false;})
+      .on('dragstart', function(){return false;});
+   % endif
+   resized();
+});
+</script>
+</%def>
+
+<%def name="play_video(obj, tran, o_url, kpc_value)">
+<div style="border:1px solid #e4882a;${h.width(obj, True)}">
+  <video ${h.width(obj)} ${h.height(obj)} title="${tran.tiitel}" id="bmvideo${obj.id}"
+% if obj.autostart:
+       autoplay
+% endif
+% if obj.isekorduv:
+       loop
+% endif
+       oncontextmenu="return false" onselectstart="return false" ondragstart="return false" controls>
+  <source src="${o_url}" type="${obj.mimetype}">
+</video>
+  % if obj.max_kordus is not None and kpc_value and kpc_value >= obj.max_kordus:
+  <script>
+    set_media_over($('video#bmvideo${obj.id}'));
+  </script>
+  % endif
+</div>
+<br/>
+</%def>
+
+<%def name="play_audio(obj, tran, o_url, kpc_value)">
+% if obj.nocontrols:
+<div class="audio-nocontrols">
+% endif
+<audio ${h.width(obj)} ${h.height(obj)} id="audio_${obj.id}" controlslist="nodownload noplaybackrate"
+       ${tran.tiitel and 'title="%s"' % tran.tiitel or ''}
+       ${obj.pausita and 'nopause="yes"' or ''}
+       ${obj.max_kordus and 'max_play_count="%d"' % obj.max_kordus or ''}
+       ${obj.autostart and 'autoplay' or ''} ${obj.isekorduv and 'loop' or ''} ${not obj.nocontrols and 'controls' or ''}>
+  <source src="${o_url}" type="${obj.mimetype}">
+</audio>
+% if obj.nocontrols:
+</div>
+% endif
+  % if obj.max_kordus is not None and kpc_value and kpc_value >= obj.max_kordus:
+  <script>
+    set_media_over($('video#bmaudio${obj.id}'));
+  </script>
+  % endif
+
+</%def>
+
+<%def name="play_media_swf(obj, tran, o_url, kpc_value)">
+<object ${h.width(obj)} ${h.height(obj)} title="${tran.tiitel}" type="application/x-shockwave-flash">
+  <param name="allowfullscreen" value="false"></param>
+  <param name="allowscriptaccess" value="never"></param>
+  <param name="flashvars" value="file=${o_url}"></param>
+  <param name="allowFullScreen" value="true"></param>
+  <p>Sorry but your browser doesn't support HTML5 video.</p>    
+</object>
+</%def>
+
+<%def name="play_media(obj, tran, o_url, kpc_value)">
+% if h.is_msie():
+## IE
+<object ${h.width(obj)} ${h.height(obj)} title="${tran.tiitel}">
+  <param name="movie" value="${o_url}"></param>
+  <param name="allowFullScreen" value="true"></param>
+  <embed src="${o_url}"
+     type="${obj.mimetype}" 
+     autostart="${obj.autostart and 'true' or 'false'}"
+     loop="${obj.isekorduv and 'true' or 'false'}"
+  % if obj.nahtamatu:
+     hidden="true"
+ % endif
+     allowscriptaccess="never" 
+     allowfullscreen="true" 
+     ${h.width(obj)} ${h.height(obj)}>
+  </embed>
+</object>
+
+    % else:
+## mozilla
+
+<object ${h.width(obj)} ${h.height(obj)} data="${o_url}" title="${tran.tiitel}">
+  <param name="url" value="${o_url}"></param>
+  <param name="movie" value="${o_url}"></param>
+  <param name="allowFullScreen" value="true"></param>
+  <embed src="${o_url}"
+     type="${obj.mimetype}" 
+     autostart="${obj.autostart and 'true' or 'false'}"
+     loop="${obj.isekorduv and 'true' or 'false'}"
+ % if obj.nahtamatu:
+     hidden="true"
+ % endif
+     allowscriptaccess="never" 
+     allowfullscreen="true" 
+     ${h.width(obj)} ${h.height(obj)}>
+  </embed>
+</object>
+    % endif
+</%def>
+

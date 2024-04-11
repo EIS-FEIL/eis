@@ -1,0 +1,86 @@
+## -*- coding: utf-8 -*- 
+<%inherit file="baasplokk.mako"/>
+
+<%def name="block_edit()">
+<%
+  obj = c.block.taustobjekt
+  tr_obj = obj and obj.tran(c.lang, False)
+%>
+% if c.lang and obj:
+${self.file_row(obj, '', None, True)}
+% endif
+% if c.is_edit:
+<div class="dropzone dropzone-add">
+% elif c.is_tr:
+<div class="dropzone dropzone-upd">
+% else:
+</div>
+  % if obj:
+  ${self.file_row(obj, '')}
+  % endif
+</div>
+<div class="file-template" style="display:none">
+  ${self.fz_template_edit(obj)}
+</div>
+
+% if c.is_edit or c.is_tr:
+<script>
+jquery11(function(){
+  jquery11('div.dropzone').dropzone({
+##       url: "${h.url('ylesanne_update_taustobjekt', ylesanne_id=c.ylesanne.id, sisuplokk_id=c.block.id, id=obj.id, lang=c.lang)}",
+       url: "${h.url('ylesanne_create_taustobjektid', ylesanne_id=c.ylesanne.id, sisuplokk_id=c.block.id, lang=c.lang)}",
+       dictDefaultMessage: "${_(u"Drop files here or click here to upload")}",
+       previewTemplate: document.querySelector('.file-template').innerHTML,
+       sending: function(file){
+           ## eemaldame senise tõlke
+           var el = jquery11(file.previewElement);
+           el.parent().children('.file-row').filter(':not(:last)').remove();
+        }
+});
+});
+</script>
+% endif
+</%def>
+
+<%def name="fz_template_edit(obj)">
+  <div class="file-row" style="display:inline-block;">
+    <div class="dz-preview dz-file-preview well" id="dz-preview-template">
+      <div class="dz-details">
+        % if c.lang and obj:
+        <a href="${obj.get_url(c.lang)}" target="_blank">images/${obj.filename}</a>                     
+        % else:
+        <div class="dz-filename">images/<span data-dz-name></span></div>
+        % endif
+        <div class="dz-size" data-dz-size></div>
+      </div>
+      <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+      <div class="dz-error-message"><span data-dz-errormessage></span></div>
+    </div>
+  </div>
+</%def>  
+
+<%def name="file_row(obj, prefix, tr_obj, ronly)">
+<%
+  lang = tr_obj and c.lang or c.orig_lang
+  obj2 = tr_obj or obj
+%>
+  <div class="file-row" style="display:inline-block;">
+    % if c.lang:
+    ${h.lang_tag(lang)}
+    % endif
+    <div class="dz-preview dz-file-preview well" id="dz-preview-template">
+      <div class="dz-details">
+        <a href="${obj.get_url(lang)}" target="_blank">images/${obj.filename}</a>             
+        <div class="dz-size" data-dz-size>${h.filesize(obj2.filesize)}</div>
+      </div>
+    </div>
+  </div>
+</%def>
+
+<%def name="block_view()">
+<% mo = c.block.taustobjekt %>
+% if c.block.staatus and mo:
+${h.link_to(mo.filename, mo.get_url(c.lang), target='_blank')}
+% endif
+</%def>
+

@@ -1,0 +1,68 @@
+## -*- coding: utf-8 -*- 
+## $Id: protokoll.osalejad.mako.tmp 9 2015-06-30 06:34:46Z ahti $         
+<%inherit file="/common/formpage.mako"/>
+
+<%def name="page_title()">
+${_("Toimumise protokolli sisestamine")} | ${c.toimumisprotokoll.tahistus}
+</%def>      
+<%def name="breadcrumbs()">
+${h.crumb(_('Testi toimumise protokolli sisestamine'),h.url('sisestamine_protokollid', toimumisaeg_id=c.testikoht.toimumisaeg_id))}
+${h.crumb_sep()}
+${h.crumb(c.testikoht.tahised, h.url('sisestamine_protokoll_osalejad', toimumisprotokoll_id=c.toimumisprotokoll.id))}
+${h.crumb_sep()}
+${h.crumb(_('Osalejad'))}
+</%def>
+
+<%def name="draw_before_tabs()">
+<%include file="tprotokoll.before_tabs.mako"/>
+</%def>
+
+<%def name="draw_tabs()">
+<%include file="tprotokoll.tabs.mako"/>
+</%def>
+
+<%def name="tabs_label()">
+## kui soorituskohas on mitu keelt/paketti, 
+## siis lingime teistele sama soorituskoha protokollidele
+<% testipaketid = c.toimumisprotokoll.testipaketid %>
+% if len(testipaketid) > 1:
+  % for pakett in testipaketid:
+    % if pakett == c.testipakett:
+      ${pakett.lang_nimi}
+    % else:
+      ${h.link_to(pakett.lang_nimi, h.url('sisestamine_protokoll_osalejad', toimumisprotokoll_id=toimumisprotokoll.id))}
+    % endif
+  % endfor
+% endif
+## kui tahad midagi kuvada lipikuterea paremas servas
+</%def>
+
+${h.form_save(None)}
+% if c.testimiskord.test.testityyp == const.TESTITYYP_EKK:
+## konsultatsiooni sooritajaid ei sisestata
+% if not c.testimiskord.prot_tulemusega:
+<%include file="protokoll.labiviijad_list.mako"/>
+% endif
+% endif
+
+${_("Märkused")}
+${h.textarea('markus', c.toimumisprotokoll.markus, rows=5)}
+<br/>
+
+% if c.is_edit:
+${h.checkbox('kinnitatud', True, checked=c.toimumisprotokoll.staatus==const.B_STAATUS_KINNITATUD,
+label=_('Protokoll kinnitatud'))}
+<br/>
+${h.submit()}
+% endif
+${h.end_form()}
+
+${h.form_search(h.url('sisestamine_protokollid'))}
+${h.hidden('toimumisaeg_id',c.testikoht.toimumisaeg_id)}
+
+${_("Järgmise soorituskoha tähis:")} ${h.text('tk_tahis', c.tk_tahis, size=15,
+class_=c.focus and 'initialfocus' or None)}
+${h.button(_('Järgmine'), id='otsi', onclick='this.form.submit()')}
+${h.end_form()}
+
+

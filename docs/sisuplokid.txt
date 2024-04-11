@@ -1,0 +1,388 @@
+﻿Eri ülesandetüüpide andmemudeli kirjeldus
+
+Kantsulgudes on kirje väljad.
+Tärn * tähistab, et kirjeid võib olla mitu (tärni puudumisel on ainult üks kirje).
+
+taustobjekt = sisuobjekt[row_type="b"]
+piltobjekt = sisuobjekt[row_type="g"]
+meediaobjekt = sisuobjekt[row_type="m"]
+valikupiirkond = valik[row_type="h"]
+baaskysimus = kysimus[kood=NULL]
+
+Geogebra (geogebra)
+sisuplokk[tyyp="24"]
+	kysimus
+		tulemus[baastyyp="file"]
+	meediaobjekt
+kvsisu[tyyp='f'][filename][filedata]
+
+Sobitamine (match2)
+sisuplokk[tyyp="23"]
+	baaskysimus[seq=1] (valikuhulk 1)
+		* valik
+	baaskysimus[seq=2] (valikuhulk 2)
+		* valik
+	* kysimus[kood]
+		tulemus[baastyyp="identifier"]
+* kvsisu[tyyp='i'][kood1=valik.kood]
+# kui kysimus1.ridu == 2, siis kysimused on teisest hulgast ja valikud esimesest hulgast
+# muidu on kysimused esimesest hulgast ja valikud teisest hulgast
+
+Sobitamine kolme hulgaga (match3) vana, 1 küsimusega
+sisuplokk[tyyp="5"]
+	kysimus[seq=1][ridu=0] (valikuhulk 1)
+		* valik
+		tulemus[baastyyp="directedPair"]
+	kysimus[seq=2] (valikuhulk 2)
+		* valik
+	kysimus[seq=3] (valikuhulk 3)
+		* valik
+* kvsisu[tyyp='p'][kood1=valik.kood][kood2=valik.kood][maatriks=MAATRIKS]
+# kui MAATRIKS=1, siis kood1 on hulgast 1, kood2 on hulgast 2
+# kui MAATRIKS=2, siis kood1 on hulgast 2, kood2 on hulgast 3
+# kui MAATRIKS=3, siis kood1 on hulgast 1, kood2 on hulgast 3
+
+Sobitamine kolme hulgaga (match3a)
+sisuplokk[tyyp="67"]
+	kysimus[seq=1][ridu=2] (valikuhulk 1)
+		* valik
+	kysimus[seq=2] (valikuhulk 2)
+		* valik
+	kysimus[seq=3] (valikuhulk 3)
+		* valik
+	* kysimus[kood]
+		tulemus[baastyyp="identifier"]
+* kvsisu[tyyp='i'][kood1=valik.kood][maatriks=MAATRIKS]
+# kui MAATRIKS=1, siis kood1 on hulgast 1
+# kui MAATRIKS=2, siis kood1 on hulgast 3
+
+Sobitamine kolme hulgaga kolmikute hindamisega (match3b)
+sisuplokk[tyyp="5"]
+	kysimus[seq=1][ridu=2] (valikuhulk 1)
+		* valik
+	kysimus[seq=2] (valikuhulk 2)
+		* valik
+	kysimus[seq=3] (valikuhulk 3)
+		* valik
+	* kysimus[kood]
+		tulemus[baastyyp="directedPair"]
+* kvsisu[tyyp='i'][kood1=valik.kood][maatriks=MAATRIKS]
+# kui MAATRIKS=1, siis kood1 on hulgast 1
+# kui MAATRIKS=2, siis kood1 on hulgast 3
+####### kui kysimus1.ridu=1, siis kysimus on hulgast 1, kood1 on hulgast 2, kood2 on hulgast 3
+# kysimus on hulgast 2, kood1 on hulgast 1, kood2 on hulgast 3
+
+Valikvastusega küsimus (choice)
+sisuplokk[tyyp="12"]
+	kysimus 
+		* valik
+		tulemus[baastyyp="identifier"]
+* kvsisu[tyyp='i'][kood1=valik.kood]
+
+Mitme valikuga tabel (mchoice)
+sisuplokk[tyyp="59"]
+    baaskysimus[seq=1] 
+        * valik[kood] (küsimuste tekstid)
+    baaskysimus[seq=2]
+        * valik[kood] (valikvastused)
+    * kysimus[kood=valik.kood] (baaskysimus1 valik)
+* kvsisu[kood1=valik.kood] (baaskysimus2 valik)
+
+Kirjavahemärkide lisamine (punkt)
+sisuplokk[tyyp="34"]
+    baaskysimus[seq=1]
+        * valik[kood] (küsimuste tekstid)
+    * kysimus[kood=valik.kood] (baaskysimus valik)
+        tulemus[baastyyp="posstr"]
+            * hindamismaatriks[kood1=vastus][kood2=lynga kood][koordinaadid=lynga jrk]
+* kvsisu[sisu=vastus][kood2=lynga kood või NULL][koordinaat=lynga jrk]
+
+Seostamine (associate)
+sisuplokk[tyyp="18"]
+	kysimus
+		* valik
+		tulemus[baastyyp="pair"]
+* kvsisu[tyyp='p'][kood1=valik.kood][kood2=valik.kood]
+
+Järjestamine (order)
+sisuplokk[tyyp="15"]
+	kysimus
+		* valik
+		tulemus[baastyyp="identifier"]
+kvsisu[tyyp='o'][sisu="valik.kood;valik.kood;...;valik.kood"]
+
+Tekstiosa valik (hottext)
+sisuplokk[tyyp="14"]
+	* kysimus
+		* valik
+		tulemus[baastyyp="identifier"]
+* kvsisu[tyyp='i'][kood1=valik.kood]
+
+Tekstiosa värvimine (colortext)
+sisuplokk[tyyp="29"]
+	baaskysimus
+		* valik (värvid)
+	* kysimus[kood]
+		tulemus[baastyyp="directedPair"]
+        * valik (tekstiosad)
+* kvsisu[tyyp='p'][kood1=valik.kood][kood2=valik.kood]
+# kood1 on tekstiosa kood, kood2 on värvi kood
+
+Avatud vastusega lünk (inlinetext)
+sisuplokk[tyyp="20"]
+	* kysimus
+		tulemus[baastyyp="string|float|integer|math"]
+* kvsisu[tyyp='s'][sisu]
+
+Valikvastusega lünk (inlinechoice)
+sisuplokk[tyyp="21"]
+	* kysimus
+		* valik
+		tulemus[baastyyp="identifier"]
+* kvsisu[tyyp='i'][kood1=valik.kood]		
+
+Pangaga lünk (gap)
+sisuplokk[tyyp="4"]
+	kysimus[seq=0] (valikute sidumiseks)
+		* valik
+	* kysimus[kood]
+		tulemus[baastyyp="identifier"]
+kvsisu[tyyp='i'][kood1=valik.kood]
+# kui tulemus.kardinaaldus on ordered, siis on lisaks veel analüüsikirje:
+kvsisu[tyyp='o'][sisu="valik.kood;valik.kood;...;valik.kood"]
+
+
+Pangaga lünk, aga ilma lünkadeta (gap)
+sisuplokk[tyyp="4"]
+	kysimus[seq=0][ridu=2] (valikute sidumiseks ja väljaspool lünki antud muu vastuse jaoks)
+		* valik 
+		tulemus[baastyyp="identifier"]
+	* kysimus[kood]
+		tulemus[baastyyp="identifier"]        
+kvsisu[tyyp='i'][kood1=valik.kood][sisu=lynga jrk nr]
+# kui tulemus.kardinaaldus on ordered, siis on lisaks veel analüüsikirje:
+kvsisu[tyyp='o'][sisu="valik.kood;valik.kood;...;valik.kood"][kood2=lynga jrk nr]
+# kui lohistati kohta, kus pole lünka, siis kvsisu on seotud baaskysimusega
+
+Lühivastusega küsimus (text)
+sisuplokk[tyyp="16"]
+	kysimus
+		tulemus[baastyyp="string|integer|float"]
+kvsisu[tyyp='s'][sisu]
+
+Avatud vastusega küsimus (exttext)
+sisuplokk[tyyp="19"]
+	kysimus
+		tulemus[baastyyp="string|integer|float"]
+kvsisu[tyyp='s'][sisu]
+
+Ristsõna (crossword)
+sisuplokk[tyyp="26"]
+	* kysimus
+		tulemus[baastyyp="string"] (sõna)
+	* sisuobjekt[kood=kysimus.kood][kysimus_id=kysimus.id] (pildid)
+kvsisu[tyyp='s'][sisu]
+
+Matemaatilise teksti sisestamine (math)
+sisuplokk[tyyp="53"]
+	kysimus
+		tulemus[baastyyp="math"]
+kvsisu[tyyp='s'][sisu]
+
+Liugur (slider)
+sisuplokk[tyyp="11"]
+	kysimus
+		kyslisa
+		tulemus[baastyyp="float|integer"]
+kvsisu[tyyp='s'][sisu]
+
+Piltide lohistamine (pos)
+sisuplokk[tyyp="1"]
+	taustobjekt
+	* kysimus
+		tulemus[baastyyp="point"]
+	* piltobjekt[kysimus_id=kysimus.id][kood=kysimus.kood]
+kvsisu[tyyp='x'][koordinaat="X Y"]
+
+Piltide lohistamine II (pos2)
+sisuplokk[tyyp="62"]
+	taustobjekt
+    baaskysimus[seq=1]
+        * valikupiirkond
+    * kysimus
+		tulemus[baastyyp="identifier"]
+	* piltobjekt[kysimus_id=kysimus.id][kood=kysimus.kood]
+kvsisu[tyyp='x'][koordinaat="X Y"][kood1=valikupiirkond.kood]
+
+Tekstide lohistamine (txpos)
+sisuplokk[tyyp="56"]
+	taustobjekt
+	kysimus[seq=1]
+		* valik
+	* kysimus[kood=valik.kood]
+		tulemus[baastyyp="point"]
+kvsisu[tyyp='x'][koordinaat="X Y"]
+
+Tekstide lohistamine II (txpos2)
+sisuplokk[tyyp="60"]
+	taustobjekt
+	baaskysimus[seq=1]
+		* valik (küsimuse tekst)
+    baaskysimus[seq=2]
+        * valikupiirkond
+	* kysimus[kood=valik.kood]
+		tulemus[baastyyp="identifier"]
+kvsisu[tyyp='x'][koordinaat="X Y"][kood1=valikupiirkond.kood] # kood1 määratakse serveris salvestamisel
+
+Tekstide lohistamine kujunditele (txgap)
+sisuplokk[tyyp="63"]
+	taustobjekt
+	baaskysimus[seq=1]
+		* valik (küsimuse tekst)
+    baaskysimus[seq=2]
+        * valikupiirkond
+	* kysimus[kood=valik.kood]
+		tulemus[baastyyp="identifier"]
+kvsisu[tyyp='i'][koordinaat="X Y"][kood1=valikupiirkond.kood]
+
+Tekstide seostamine kujunditega (txass)
+sisuplokk[tyyp="65"]
+	taustobjekt
+	baaskysimus[seq=1]
+		* valik (küsimuse tekst)
+    baaskysimus[seq=2]
+        * valikupiirkond
+	* kysimus[kood=valik.kood]
+		tulemus[baastyyp="identifier"]
+kvsisu[tyyp='i'][kood1=valikupiirkond.kood]
+
+Joonistamine (draw)
+sisuplokk[tyyp="3"]
+	taustobjekt
+	kysimus
+		tulemus[baastyyp="polyline"]
+kvsisu[tyyp='c'][koordinaadid][kujund]
+
+Faili laadimine (upload)
+sisuplokk[tyyp="17"]
+    kysimus
+        tulemus
+kvsisu[tyyp='f'][filename][filedata]
+
+Piltide lohistamine kujunditele (grgap)
+sisuplokk[tyyp="6"]
+	taustobjekt
+	kysimus[seq=1]
+		tulemus[baastyyp="directedPair"]
+        * valikupiirkond
+	* piltobjekt (lohistatavad pildid)
+    baaskysimus[seq=2]
+        * valik[kood=piltobjekt.kood]
+kvsisu[tyyp='p'][kood1=piltobjekt.kood][kood2=valik.kood][koordinaat="X Y"]
+# kood1 on pildi kood (selgituse jaoks on loodud baaskysimuse valiku kirje)
+# kood2 on piirkonna kood, kuhu pilt lohistati
+
+Alade värvimine (colorarea)
+sisuplokk[tyyp="27"]
+	taustobjekt
+	baaskysimus
+		* valik (värvid)
+	* kysimus
+		valikupiirkond
+		tulemus[baastyyp="identifier"]
+kvsisu[tyyp='i'][kood1=valik.kood]
+
+Pildi avamine (uncover)
+sisuplokk[tyyp="28"]
+	taustobjekt
+	* kysimus
+		* valik
+		tulemus[baastyyp="string|float|integer"]
+kvsisu[tyyp='s'][sisu]
+
+Teekonna märkimine (trail)
+sisuplokk[tyyp="57"]
+	taustobjekt
+	kysimus
+		tulemus[baastyyp="idlist"]
+        * valik[kood][selgitus]
+kvsisu[tyyp='s'][sisu]
+
+Pildil oleva kujundi valik (hotspot)
+sisuplokk[tyyp="7"]
+	taustobjekt
+	kysimus
+		* valikupiirkond
+		tulemus[baastyyp="identifier"]
+* kvsisu[tyyp='i'][kood1=valik.kood]
+
+Järjestamine pildil (grorder)
+sisuplokk[tyyp="8"]
+	taustobjekt
+	kysimus
+		* valikupiirkond
+		tulemus[baastyyp="identifier"]
+	* piltobjekt
+kvsisu[tyyp='o'][sisu="valik.kood;valik.kood;...;valik.kood"]
+
+Võrguülesanne (grordass)
+sisuplokk[tyyp="58"]
+	taustobjekt
+	kysimus
+		* valikupiirkond
+		tulemus[baastyyp="identifier"]
+	kysimus[seq=2][pseudo=true]	 (valevastuste arv)
+		tulemus[baastyyp="integer"]
+kvsisu[tyyp='o'][sisu="valik.kood;valik.kood;...;valik.kood"]
+
+Märkimine pildil (select)
+sisuplokk[tyyp="9"]
+	taustobjekt
+	kysimus
+		tulemus[baastyyp="point"]
+kvsisu[tyyp='x'][koordinaat="X Y"]
+
+Märkimine pildil II (select2)
+sisuplokk[tyyp="61"]
+	taustobjekt
+    baaskysimus[seq=1]
+        * valikupiirkond
+    kysimus[seq=2]
+		tulemus[baastyyp="identifier"]
+kvsisu[tyyp='x'][koordinaat="X Y"][kood1=valikupiirkond.kood] # kood1 määratakse serveris salvestamisel
+
+Seostamine pildil (grassociate)
+sisuplokk[tyyp="10"]
+	taustobjekt
+	kysimus
+		* valikupiirkond
+		tulemus[baastyyp="pair"]
+	* piltobjekt
+kvsisu[tyyp='p'][id1=valikupiirkond.kood][id2=valikupiirkond.kood]
+
+Kõne salvestamine (audio)
+sisuplokk[tyyp="91"]
+	kysimus
+		tulemus[baastyyp="file"]
+		kyslisa
+kvsisu[tyyp='f'][filename][filedata]
+
+Kratt (kratt)
+sisuplokk[tyyp="68"][sisu=json]
+    kysimus (kui on vastuse salvestamisega kratt)
+
+Arvutatud väärtus (formula)
+sisuplokk[tyyp="80"]
+	kysimus[pseudo=true]
+		tulemus[baastyyp="string|integer|float|boolean"]
+kvsisu[tyyp='s'][sisu]
+
+Alusteksti kommentaarid
+sisuplokk[tyyp="52"]
+    kysimus
+kvsisu[tyyp='s'][sisu]
+
+Multimeedia (media)
+sisuplokk[tyyp="51"]
+    * meediaobjekt[kysimus] # viide kysimusele on loenduriga objektidel
+    * kysimus[baastyyp="integer"] # kuulamiste arvu loendur (failiga seob sisuobjekt.kysimus_id)

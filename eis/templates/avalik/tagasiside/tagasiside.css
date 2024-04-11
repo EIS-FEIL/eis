@@ -1,0 +1,31 @@
+/* PDF jaoks muuta ka feedbackreport.py */
+
+.items-tbl.compact .compactlink {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.items-tbl.compact .compact-row .compact-data {
+    display:none;
+}
+
+/* kopeeri ka feedbackreport.py funktsiooni report2pdf */
+tr.total-row > td {
+    background-color: #e6ddc5;
+}
+tr.city-row > td {
+    background-color:#f6f2da;
+}
+
+/* valimi ja mittevalimi tulemuse erinevuse korral näidatav valimi tulemus */
+font.v-mv-diff {
+    color: #ff0000;
+}
+tr.v-mv-diff > td {
+    background-color:#fcdcec;
+}
+
+/* funktsiooniga g_lnk_np_ns_cnt() genereeritud link */
+a.lnk-opilane, a.lnk-opilane:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

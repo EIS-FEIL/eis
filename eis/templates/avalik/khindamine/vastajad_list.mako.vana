@@ -1,0 +1,87 @@
+## -*- coding: utf-8 -*- 
+${h.pager(c.items)}
+<% 
+   sisestatud_cnt = 0 
+   sisestus_isikukoodiga = c.toimumisaeg.testimiskord.sisestus_isikukoodiga
+%>
+
+% if c.items:
+<table width="100%" class="table table-borderless table-striped" border="0" >
+  <thead>
+    <tr>
+      ${h.th_sort('sooritus.tahis', _("Test"))}
+      ${h.th_sort('hindamine.liik', _("Hindamise liik"))}
+      ##${h.th_sort('kasutaja.nimi', _("Hindaja"))}
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+  <tbody>
+
+    % for n, rcd in enumerate(c.items):
+    <% 
+       tos, holek, hindamine = rcd
+       if c.app_ekk:
+          url_edit = h.url('hindamine_hindajavaade_edit_hindamine', toimumisaeg_id=c.toimumisaeg.id, hindamiskogum_id=c.hindamiskogum.id, hindaja_id=hindamine.labiviija_id, id=tos.id)
+       else:
+          url_edit = h.url('khindamine_edit_hindamine', toimumisaeg_id=c.toimumisaeg.id, hindaja_id=hindamine.labiviija_id, id=tos.id)
+    %>
+    <tr>
+      <td>
+        % if c.staatus==const.H_STAATUS_POOLELI and hindamine.sisestatud:
+        <% sisestatud_cnt += 1 %>
+        ${h.checkbox('hindamine_id', hindamine.id, onclick="toggle_add()", class_="hindamine_id")}
+        % endif
+        ${tos.tahised}
+        % if sisestus_isikukoodiga:
+        ${tos.sooritaja.kasutaja.isikukood}
+        % endif
+      </td>
+      <td>${_("{n}. hindamine").format(n=hindamine.liik)}</td>
+      <td>
+        % if not hindamine or hindamine.staatus == const.H_STAATUS_HINDAMATA:
+        ${h.btn_to(_("Alusta hindamist"), url_edit)}
+        % elif hindamine.staatus == const.H_STAATUS_HINNATUD:
+        ${h.fstr(hindamine.pallid)} p
+        % elif hindamine.staatus != const.H_STAATUS_HINNATUD:
+        ${h.btn_to(_("Jätka hindamist"), url_edit)}
+        % endif
+      </td>
+      <td>
+        ${holek.staatus_nimi}
+        (${_("tase")}: ${holek.hindamistase})
+        ${holek.selgitus or holek.hindamisprobleem_nimi}
+        <!-- oleku ID: ${holek.id} -->
+      </td>
+    </tr>
+    % endfor
+  </tbody>
+</table>
+% endif
+<br/>
+
+% if sisestatud_cnt:
+## peatatud hindamiste sakk ja on selliseid hindamisi, mida saaks kinnitada
+<script>
+  function toggle_add()
+  {
+         var visible = ($('input:checked.hindamine_id').length > 0);
+         if(visible)
+         { 
+           $('span#add.invisible').removeClass('invisible');
+         }
+         else
+         {
+           $('span#add').filter(':not(.invisible)').addClass('invisible');
+         }
+  }
+  $(document).ready(function(){
+     toggle_add();
+  });
+</script>
+
+${h.button(_("Vali kõik"), onclick="$('input.hindamine_id').prop('checked', true);toggle_add();")}
+${h.button(_("Tühista valik"), onclick="$('input.hindamine_id').prop('checked', false);toggle_add();")}
+<span id="add" class="invisible">
+${h.submit(_("Kinnita hindamised"))}
+</span>
+% endif

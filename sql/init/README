@@ -1,0 +1,1 @@
+pg_dump -a -t ehak --column-inserts -f ehak.sql -U eisik eisdb2 

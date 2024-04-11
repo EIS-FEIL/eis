@@ -1,0 +1,12 @@
+# m h  dom mon dow   command
+28 4 * * * root /srv/eis/bin/python -m eis.scripts.ads_update > /proc/1/fd/1 2>/proc/1/fd/2
+#vaidetahtaeg kinni pandud 2019-05-06
+#1 1 * * * root /srv/eis/bin/python -m eis.scripts.vaidetahtaeg > /proc/1/fd/1 2>/proc/1/fd/2
+5 4 * * * root /srv/eis/bin/python -m eis.scripts.remove_esitlus -y 72 > /proc/1/fd/1 2>/proc/1/fd/2
+0 2 1 * * root /srv/eis/bin/python -m eis.scripts.remove_test > /proc/1/fd/1 2>/proc/1/fd/2
+41 5 * * * root /srv/eis/bin/python -m eis.scripts.remove_deleted > /proc/1/fd/1 2>/proc/1/fd/2
+9 7 * * 1-5 root /srv/eis/bin/python -m eis.scripts.teavitused > /proc/1/fd/1 2>/proc/1/fd/2
+5 3 * * * root /srv/eis/bin/python -m eis.scripts.remove_filecache > /proc/1/fd/1 2>/proc/1/fd/2
+45 5 * * * root /srv/eis/bin/python -m eis.scripts.opitulemused > /proc/1/fd/1 2>/proc/1/fd/2
+#21 7 11 10 * root /srv/eis/bin/python -m eis.scripts.plank_aruanne -op a1 > /proc/1/fd/1 2>/proc/1/fd/2
+#1 7 * * 1 root /srv/eis/bin/python -m eis.scripts.plank_aruanne -op a2 > /proc/1/fd/1 2>/proc/1/fd/2

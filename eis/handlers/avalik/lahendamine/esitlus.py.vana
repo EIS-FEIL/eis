@@ -1,0 +1,180 @@
+# -*- coding: utf-8 -*- 
+
+from datetime import datetime, timedelta
+
+from eis.lib.baseresource import *
+_ = i18n._
+from eis.lib.block import BlockController
+from eis.lib.blockresponse import BlockResponse
+
+log = logging.getLogger(__name__)
+
+class EsitlusController(BaseResourceController):
+    _permission = 'lahendamine'
+    _MODEL = model_s.Esitlus
+    _authorize = False
+
+    def show(self):
+        "Ülesande sisu ja vastuse kuvamine"
+        err, ylesanne_id, item = self._check(timedelta(hours=6))
+        self.prf()
+        if not err:
+            html = None
+            ylesanne = model.Ylesanne.get(item.ylesanne_id)
+            # ei kasuta ettetehtud sisu, kuna on vaja arvestada kasutajaliidese keelega
+            # if item.lahendaja and not item.ylesandevastus_id and not ylesanne.evast_kasuta and not ylesanne.on_juhuarv:
+            #     # kui ülesanne kuvatakse lahendamiseks
+            #     # ning vastuseid ei ole veel antud
+            #     # ning ülesanne ei kasuta ka varasematele ülesannetele antud vastuseid,
+            #     # siis saame kasutada ettetehtud ülesande sisu
+            #     self.prf()
+            #     ette_esitlus = model_s.Esitlus.get_ette_esitlus(ylesanne, item.lang) or None
+            #     if not ette_esitlus:
+            #         self.prf()
+            #         #model.Session.rollback() # lõpetame read-only
+            #         #self.prf()
+            #         ette_esitlus = BlockController.gen_ette_esitlus(ylesanne, item.lang, self)
+            #         model_s.DBSession.flush()
+            #         #model.Session.commit()
+            #         self.prf()
+            #     if ette_esitlus:
+            #         html = ette_esitlus.sisu
+            #         #log.debug('ettetehtud esitlus %s %s' % (ylesanne.id, item.lang))
+            if not html:
+                # genereerime uue sisu
+                #log.debug('gen esitlus %s %s yv %s' % (ylesanne.id, item.lang, item.ylesandevastus_id))
+                #if self.request.params.get('q_code'):
+                #    # hindajavaade koos küsimuste koodidega
+                #    self.c.show_q_code = True
+                self.prf()
+                if item.ylesandevastus_id:
+                    sooritus = item.get_sooritus(self, model)
+                    if sooritus:
+                        ylesandevastus = item.get_ylesandevastus(self, model, sooritus)
+                        if ylesandevastus and ylesandevastus.on_toorvastus:
+                            ylesandevastus.from_toorvastus()
+                            model.Session.commit()
+                html = BlockController.gen_esitlus_sisu(self, item)
+
+            self.prf()
+            resp = Response(html, content_type='text/html', accept_ranges='bytes')
+            self.prf()
+            self._save_yv_algus(item.ylesanne_id)
+            self.prf()
+            return resp
+        return Response(err, content_type='text/plain')
+
+    def update(self):
+        "Ülesande sisu kuvamine arvestades eelnevate ülesannete vastuseid"
+        return self.show()
+
+    def _save_yv_algus(self, ylesanne_id):
+        # kui toimub testi sooritamine, siis salvestame ylesande esimese avamise aja
+        #log.debug('SAVE_YV_ALGUS %s' % ylesanne_id)
+        try:
+            s_id = self.request.matchdict.get('sooritus_id') or \
+                   self.request.params.get('tos_id')
+            sooritus_id = self.convert_id(s_id)
+            vy_id = int(self.request.params.get('vy_id'))
+        except:
+            # ei toimu testi sooritamist
+            return
+        if sooritus_id and vy_id:
+            self.prf()
+            sooritus = model.Sooritus.get(sooritus_id)
+            self.prf()
+            vy = model.Valitudylesanne.get(vy_id)
+            self.prf()
+            if sooritus and vy:
+                if vy.ylesanne_id == ylesanne_id and sooritus.sooritaja.kasutaja_id == self.c.user.id:
+                    self.prf()
+                    model_s.Ylesandevaatamine.set_algus(sooritus_id, vy)
+                    self.prf()
+                    #log.info(' ****** SET')
+                    return
+                    
+    def correct(self):
+        "Õige vastuse genereerimine ja kuvamine"
+        err, ylesanne_id, item = self._check(timedelta(hours=6))
+        if not err:
+            c = self.c
+            c.y_prefix = 'r%s' % ylesanne_id
+            c.block_correct = True
+            c.lang = item.lang
+            ylesanne = model.Ylesanne.get(ylesanne_id)
+            yv = item.get_ylesandevastus(self, model, None)
+            c.correct_responses = ylesanne.correct_responses(yv,
+                                                             lang=c.lang,
+                                                             hindaja=item.hindaja)
+            random_responses = {}
+            if ylesanne.on_juhuarv:
+                for plokk in ylesanne.sisuplokid:
+                    if plokk.tyyp == const.BLOCK_RANDOM:
+                        for k in plokk.kysimused:
+                            kood = k.kood
+                            kv = c.correct_responses.get(kood)
+                            if kv:
+                                for ks in kv.kvsisud:
+                                    value = ks.sisu
+                                    random_responses[kood] = value
+            
+            html = BlockController.render_assessment(ylesanne, c.lang, self, random_responses)
+            return Response(html, content_type='text/html', accept_ranges='bytes')
+
+        log.info(err)
+        return Response(err, content_type='text/plain')
+
+    def vahend(self):
+        "Abivahendi kuvamine"
+        ylesanne_id = int(self.request.matchdict.get('ylesanne_id'))
+        vahend_kood = self.request.matchdict.get('vahend')
+        q = (model_s.DBSession.query(sa.func.max(model_s.Esitlus.created))
+             .filter_by(ylesanne_id=ylesanne_id)
+             .filter_by(kasutaja_id=self.c.user.id))
+        created = q.scalar()
+        if not created or created < datetime.now() - timedelta(hours=6):
+            err = _("Vahend pole lubatud")
+            log.info(err)
+        else:
+            q = (model.Session.query(model.Vahend.id)
+                 .filter_by(ylesanne_id=ylesanne_id)
+                 .filter_by(vahend_kood=vahend_kood))
+            if not q.count():
+                err = _("Vahend pole lubatud")
+                log.info(err)
+            else:
+                self.c.item = model.Klrida.get_by_kood('VAHEND', vahend_kood)
+                template = '/avalik/lahendamine/abivahend.mako'
+                return self.render_to_response(template)
+        
+        return Response(err, content_type='text/plain')
+
+    def _check(self, diff):
+        err = None
+        ylesanne_id = int(self.request.matchdict.get('ylesanne_id'))
+        ylesanne = model.Ylesanne.get(ylesanne_id)
+        esitlus_id = self.request.matchdict.get('id')
+        self.prf()
+        converted_id = self.convert_id(esitlus_id, on_esitlus=True)
+        item = model_s.Esitlus.get(converted_id)
+        self.prf()
+        if not item:
+            err = _("Kirje puudub")
+        elif item.ylesanne_id != ylesanne_id:
+            err = _("Vale ülesanne")
+        elif not ylesanne:
+            err = _("Ülesanne puudub")
+        elif item.kasutaja_id and not self.c.user.id:
+            err = _("Kasutaja pole sisse loginud")
+        elif self.c.user.id != item.kasutaja_id:
+            err = _("Vale kasutaja või rakendus")
+        elif item.created < datetime.now() - diff:
+            err = _("Palun uuendada EISi põhiakna sisu")
+        elif item.ettetehtud:
+            err = _("Vale esitlus")
+        else:
+            sooritus = item.get_sooritus(self, model)
+            err = model_s.Esitlus.check_permission(ylesanne, self.c.user, sooritus, self.c.app_ekk)
+        self.prf()
+        return err, ylesanne_id, item
+

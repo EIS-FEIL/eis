@@ -1,0 +1,100 @@
+# -*- coding: utf-8 -*- 
+"Õpipädevuse testi soorituse profiilileht"
+
+from pdfutils import *
+from stylesheet import *
+from datetime import date
+from eis.model import const
+import eis.lib.helpers as h
+
+def generate(story, handler, sooritus, header, items):
+    sooritaja = sooritus.sooritaja
+    test = sooritaja.test
+    kasutaja = sooritaja.kasutaja
+    #aastad, kuud = kasutaja.get_vanus(sooritaja.algus)
+    testija = sooritaja.esitaja_kasutaja and sooritaja.esitaja_kasutaja.nimi or ''
+    if sooritaja.kool_koht:
+        klass = u'Klass: %s%s &nbsp; Kool: %s' % (sooritaja.klass or '',
+                                            sooritaja.paralleel or '',
+                                            sooritaja.kool_koht.nimi)
+    else:
+        klass = ''
+    data = [[Paragraph(test.nimi, NB),
+             Paragraph(u'Profiilileht', NB)],
+            [Paragraph(u'Nimi: %s' % sooritaja.nimi, N),
+             Paragraph(u'Testimise aeg: %s' % sooritaja.millal, N)],
+            [Paragraph(klass, N),
+             Paragraph('', N)],
+            ]
+    table = Table(data, colWidths=(100*mm, 60*mm), hAlign='LEFT')
+    story.append(table)
+    story.append(Spacer(3*mm, 3*mm))
+
+    row1 = [Paragraph(u'ÕPIPÄDEVUSE TAGASISIDELEHT', NB),
+           '',
+           '',
+           Paragraph(u'Sooritusrühm', NC),
+           '',
+           '']
+    row = [Paragraph(value, NC) for value in header]
+    data = [row1, row]
+    header_len = len(data)
+    grouprows = []
+    gridrows = [0,1]
+    for n_item, item in enumerate(items):
+        if len(item) == 1:
+            # alatestide grupi nimetus
+            grouprows.append(n_item+header_len)
+            gridrows.append(n_item+header_len)            
+        elif len(item) == 6:
+            # sooritusrühm on antud
+            gridrows.append(n_item+header_len)
+        #row = [Paragraph(value, N) for value in item]
+        if len(item) == 1:
+            row = [Paragraph(item[0], NBC)]
+            for x in range(1, len(header)):
+                row.append(Paragraph('', N))                
+        else:
+            row = []
+            for n_cell, value in enumerate(item):
+                row.append(Paragraph(value, n_cell==0 and N or NC))
+        data.append(row)
+
+    TS = [('VALIGN', (0,0), (-1,-1), 'TOP'),
+          ('GRID', (0,0), (2,-1), 0.5, colors.black),
+          #('LINEABOVE', (0,0), (-1,-1), 0.5, colors.black),
+          #('LINEBELOW', (0,-1), (-1,-1), 0.5, colors.black),                    
+          ('SPAN', (0,0), (2,0)), # tagasisideleht
+          ('SPAN', (3,0), (5,0)), # sooritusrühm
+          ]
+    for n_row in gridrows:
+        TS.append(('GRID', (3, n_row), (5, n_row), .5, colors.black))
+
+    group_end = -1
+    is_grey = len(grouprows) % 2 # esimesele grupile hall taust
+    for group_begin in reversed(grouprows):
+        # grupi nimi üle kõigi lahtrite
+        TS.append(('SPAN', (0, group_begin), (-1, group_begin)))
+        if is_grey:
+            # gruppide taust kordamööda helehall
+            TS.append(('BACKGROUND', (0, group_begin + 1), (-1, group_end), colors.HexColor(0xE3E3E3)))
+        is_grey = not is_grey
+        # 50 protsentiil tumehall
+        #TS.append(('BACKGROUND', (8, group_begin + 1), (8, group_end), colors.HexColor(0xC3C3C3)))                
+        group_end = group_begin - 1
+    
+    data, col_widths, vaba = calc_table_width(data, max_width=180*mm, nice_width=180*mm, min_extra=5*mm)
+    # et sooritusryhma veerud oleks võrdse laiusega
+    SRWIDTH = 19*mm
+    for ind in range(-3, 0):
+        print('%s/%s' % (col_widths[ind], SRWIDTH))
+        if col_widths[ind] > SRWIDTH:
+            vaba += col_widths[ind] - SRWIDTH
+            col_widths[ind] = SRWIDTH
+    # kui jääb vaba ruumi
+    if vaba > 0:
+        col_widths[0] += vaba
+
+    table = Table(data, colWidths=col_widths, style=TS, repeatRows=2, hAlign='LEFT')
+    story.append(table)
+

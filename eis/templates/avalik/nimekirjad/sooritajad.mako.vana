@@ -1,0 +1,59 @@
+## -*- coding: utf-8 -*- 
+## $Id: sooritajad.mako.vana 9 2015-06-30 06:34:46Z ahti $         
+<%inherit file="/common/page.mako"/>
+<%include file="tabs.mako"/>
+<%def name="page_title()">
+Test: ${c.item.nimi or ''} | Testi kirjeldus
+</%def>      
+<%def name="breadcrumbs()">
+${h.link_to(u'Koostatud testid', h.url('testid'))} &raquo;
+${c.item.nimi or u'Test'} &raquo;
+Testi kirjeldus
+</%def>
+${h.form_save(c.item.id)}
+<div width="100%" class="lightback">
+
+<table width="500" class="list tablesorter">
+  <caption>Testi sooritajad</caption>
+  <thead>
+    <tr>
+      ${h.th('Isikukood')}
+      ${h.th('Nimi')}
+    </tr>
+  </thead>
+  <tbody>
+    % for rcd in c.item.give_testimiskord().sooritajad:
+    <tr>
+      <td>${rcd.isikukood}</td>
+      <td>${rcd.nimi}</td>
+      <td>${h.remove(url('test', id=c.item.id,
+      isik_id=rcd.id, sub='isik'))}</td>
+    </tr>
+    % endfor    
+  </tbody>
+</table>
+% if c.item.has_permission('testid'):
+${h.btn_to_dlg('Lisa', url('test_sooritajad', test_id=c.item.id),
+  title=u'Testi sooritajate lisamine', width=500)}
+% endif
+&nbsp;
+% endif
+
+</div>
+% if c.is_edit:
+${h.submit()}
+%   if c.item.id:
+${h.btn_to('Vaata', url('test', id=c.item.id), method='get')}
+%   endif
+% elif c.item.has_permission('testid'):
+${h.btn_to('Muuda', url('edit_test', id=c.item.id), method='get')}
+% endif
+
+
+${h.btn_back(url=url('testid'))}
+
+% if c.item.id and c.item.has_permission('testid'):
+${h.btn_to('Eemalda test', url('test', id=c.item.id), method='delete')}
+% endif
+
+${h.end_form()}

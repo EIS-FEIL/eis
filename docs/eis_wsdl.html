@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<title>X-tee teenused</title>
+<style>
+<!--
+th {
+    background:#efefef;
+	border-top:none;
+	border-left:none;
+	border-bottom:solid #afafaf 1.0pt;
+	border-right:solid #afafaf 1.0pt;
+	mso-border-top-alt:solid #afafaf .5pt;
+	mso-border-left-alt:solid #afafaf .5pt;
+	mso-border-alt:solid #afafaf .5pt;
+    padding:3px;    
+}
+td {
+	border-top:none;
+	border-left:none;
+	border-bottom:solid #afafaf 1.0pt;
+	border-right:solid #afafaf 1.0pt;
+	mso-border-top-alt:solid #afafaf .5pt;
+	mso-border-left-alt:solid #afafaf .5pt;
+	mso-border-alt:solid #afafaf .5pt;
+    align:left;
+    padding:3px;
+}
+td.level {
+    width: 20px;
+}
+table {
+	border-collapse:collapse;
+	border:solid #afafaf 1.0pt;
+}
+-->
+</style>
+</head>
+<body>
+
+<h2>testSystem - Monitooringuteenus</h2>
+<div class="document">
+
+
+<p>X-tee adapterserveri monitooringuteenus</p>
+</div>
+<h3 id="desc_testSystem_in">Sisend </h3><table border="1" aria-describedby="desc_testSystem_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">testSystem</td> <td></td> <td>1</td> <td></td></tr></table><h3 id="desc_testSystem_out">Väljund </h3><table border="1" aria-describedby="desc_testSystem_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>dateTime</td> <td>1</td> <td></td></tr></table>
+<h2>saisEksamid - Riigi- ja rahvusvaheliste eksamite andmed (SAIS andmekogu jaoks)</h2>
+<div class="document">
+
+
+<p>Teenus otsib sisendiks antud isikukoodiga sooritaja andmeid või kui isikukood pole antud, siis teenuse kasutaja andmeid. Väljastatakse isiku kõigi riigieksamite andmed.</p>
+<p>Teenusel on versioonid 1, 2 ja 3.
+Versioonis 3 on rahvusvaheliste eksamite tunnistuste juures väli rveksam_kood juhul, kui eksam on seotud rahvusvaheliste eksamite klassifikaatoriga. Versioonides 1 ja 2 seda välja ei esine.
+Versioonides 2 ja 3 on kasutusel EISi õppeainete klassifikaator, aga versioonis 1 identifitseeritakse õppeained (õppeaine nimetus ja kood) sõltuvalt ainest kas koodi või nimetuse järgi, vastavalt järgmisele tabelile.</p>
+<table border="1" class="docutils">
+<caption>Õppeainete klassifikaatorite vastavus</caption>
+<colgroup>
+<col width="15%" />
+<col width="23%" />
+<col width="22%" />
+<col width="40%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Aine kood EISis</th>
+<th class="head">Õppeaine nimetus</th>
+<th class="head">Õppeaine identifikaator</th>
+<th class="head">SAISi identifikaatori väärtus</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>ee</td>
+<td>Emakeel (eesti)</td>
+<td>kood</td>
+<td>1</td>
+</tr>
+<tr><td>ss</td>
+<td>Emakeel (saksa)</td>
+<td>kood</td>
+<td>1</td>
+</tr>
+<tr><td>vv</td>
+<td>Emakeel (vane)</td>
+<td>kood</td>
+<td>1</td>
+</tr>
+<tr><td>E</td>
+<td>Eesti keel</td>
+<td>kood</td>
+<td>16 – kui eksam on sooritatud 2012 või hiljem
+15 - kui eksam on sooritatud 2011 või varem</td>
+</tr>
+<tr><td>W</td>
+<td>Vene keel</td>
+<td>kood</td>
+<td>17 – kui eksam on sooritatud 2012 või hiljem
+13 – kui eksam on sooritatud 2011 või varem</td>
+</tr>
+<tr><td>R</td>
+<td>Eesti keel teise keelena</td>
+<td>nimetus</td>
+<td>eesti keel teise</td>
+</tr>
+<tr><td>A</td>
+<td>Ajalugu</td>
+<td>nimetus</td>
+<td>ajalugu</td>
+</tr>
+<tr><td>B</td>
+<td>Bioloogia</td>
+<td>nimetus</td>
+<td>bioloogia</td>
+</tr>
+<tr><td>F</td>
+<td>Füüsika</td>
+<td>nimetus</td>
+<td>füüsika</td>
+</tr>
+<tr><td>G</td>
+<td>Geograafia</td>
+<td>nimetus</td>
+<td>geograafia</td>
+</tr>
+<tr><td>I</td>
+<td>Inglise keel</td>
+<td>nimetus</td>
+<td>inglise keel</td>
+</tr>
+<tr><td>K</td>
+<td>Keemia</td>
+<td>nimetus</td>
+<td>keemia</td>
+</tr>
+<tr><td>M</td>
+<td>Matemaatika</td>
+<td>nimetus</td>
+<td>matemaatika</td>
+</tr>
+<tr><td>P</td>
+<td>Prantsuse keel</td>
+<td>nimetus</td>
+<td>prantsuse keel</td>
+</tr>
+<tr><td>S</td>
+<td>Saksa keel</td>
+<td>nimetus</td>
+<td>saksa keel</td>
+</tr>
+<tr><td>V</td>
+<td>Vene keel</td>
+<td>nimetus</td>
+<td>vene keel</td>
+</tr>
+<tr><td>C</td>
+<td>Ühiskonnaõpetus</td>
+<td>nimetus</td>
+<td>ühiskonnaõpetus</td>
+</tr>
+</tbody>
+</table>
+<p>Kui õppeaine on tabelis ning identifikaatoriks on kood, siis antakse nimetuse väljale aine nimetus EISis.
+Kui õppeaine on tabelis ning identifikaatoriks on nimetus, siis antakse koodi väljal aine kood EISis.
+Kui õppeaine ei ole tabelis, siis kasutatakse väljundis EISi õppeainete klassifikaatori koode ja nimetusi.</p>
+</div>
+<h3 id="desc_saisEksamid_in">Sisend </h3><table border="1" aria-describedby="desc_saisEksamid_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>sais_eksamid_paring (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">isikukood</td> <td>string</td> <td>1</td> <td>Isikukood: </td></tr></table><h3 id="desc_saisEksamid_out">Väljund </h3><table border="1" aria-describedby="desc_saisEksamid_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>sais_eksamid_vastus (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">sais_eksam_jada</td> <td>sequence</td> <td>1</td> <td>Registreeritud riigieksamid (maksimumtulemused aine ja kursuse kaupa)</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>sais_eksam_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">nimetus</td> <td>string</td> <td>1</td> <td>Eksami aine</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kood</td> <td>string</td> <td>1</td> <td>Eksami aine kood</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kursus</td> <td>string</td> <td>0...1</td> <td>Kursus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">keeletase</td> <td>string</td> <td>0...1</td> <td>Keeleoskuse tase</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kuupaev</td> <td>string</td> <td>1</td> <td>Eksami toimumise kuupäev</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tulemus</td> <td>string</td> <td>1</td> <td>Tulemus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">keele_kood</td> <td>string</td> <td>0...1</td> <td>Eksami sooritamise keele kood</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">keele_nimetus</td> <td>string</td> <td>0...1</td> <td>Eksami sooritamise keele nimetus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tunnistuse_nr</td> <td>string</td> <td>1</td> <td>Tunnistuse number</td></tr><tr><td class="level"> </td> <td colspan="6">rvtunnistused</td> <td>sequence</td> <td>1</td> <td>Rahvusvaheliste eksamite tunnistused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>sais_rvtunnistus (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">nimetus</td> <td>string</td> <td>1</td> <td>Eksami aine</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kood</td> <td>string</td> <td>1</td> <td>Eksami aine kood</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tunnistusenimetus</td> <td>string</td> <td>1</td> <td>Tunnistuse nimetus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">rveksam_kood</td> <td>string</td> <td>0...1</td> <td>Eksami kood klassifikaatoris</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">keeletase</td> <td>string</td> <td>0...1</td> <td>Keeleoskuse tase</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kuupaev</td> <td>date</td> <td>0...1</td> <td>Tunnistuse väljastamise kuupäev</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tulemus</td> <td>float</td> <td>0...1</td> <td>Arvuline tulemus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tulemusviis</td> <td>string</td> <td>1</td> <td>Tulemuse esitamise viis<br/>P - Pallides<br/>S - Protsentides<br/>T - Astmetena</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">max_tulemus</td> <td>float</td> <td>0...1</td> <td>Maksimaalne võimalik arvuline tulemus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aste_tahis</td> <td>string</td> <td>0...1</td> <td>Tulemuse aste</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aste_alates</td> <td>float</td> <td>0...1</td> <td>Tulemuse astme alumine arvuline piir</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aste_kuni</td> <td>float</td> <td>0...1</td> <td>Tulemuse astme ülemine arvuline piir</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">osatulemused</td> <td>sequence</td> <td>0...1</td> <td>Osaoskuste tulemused</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="3">item</td> <td>sais_rvosatulemus (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">nimetus</td> <td>string</td> <td>1</td> <td>Osaoskuse nimetus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">tulemus</td> <td>float</td> <td>0...1</td> <td>Arvuline tulemus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">max_tulemus</td> <td>float</td> <td>0...1</td> <td>Maksimaalne võimalik arvuline tulemus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">aste_tahis</td> <td>string</td> <td>0...1</td> <td>Tulemuse aste</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">aste_alates</td> <td>float</td> <td>0...1</td> <td>Tulemuse astme alumine arvuline piir</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">aste_kuni</td> <td>float</td> <td>0...1</td> <td>Tulemuse astme ülemine arvuline piir</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tunnistuse_nr</td> <td>string</td> <td>0...1</td> <td>Tunnistuse number</td></tr></table>
+<h2>saisApellatsioonid - Apelleeritud riigieksamite andmed (SAIS andmekogu jaoks)</h2>
+<div class="document">
+
+
+<p>Teenus väljastab sisendis antud õppeaasta eksamite tulemuste vaiete loetelu.</p>
+<p>Teenusel on versioonid 1 ja 2, mis erinevad väljundis kasutatud õppeainete klassifikaatori poolest. Versioonis 2 on kasutusel EISi õppeainete klassifikaator.
+Versioonis 1 on õppeainete kood ja nimetus kodeeritud samuti kui teenuse saisEksamid versioonis 1.</p>
+</div>
+<h3 id="desc_saisApellatsioonid_in">Sisend </h3><table border="1" aria-describedby="desc_saisApellatsioonid_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>sais_apellatsioonid_paring (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">aasta</td> <td>string</td> <td>1</td> <td>Aasta: </td></tr></table><h3 id="desc_saisApellatsioonid_out">Väljund </h3><table border="1" aria-describedby="desc_saisApellatsioonid_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>sais_apellatsioonid_vastus (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">sais_apellatsioonid_jada</td> <td>sequence</td> <td>1</td> <td>Apelleeritud riigieksamid (maksimumtulemused aine ja kursuse kaupa)</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>sais_apellatsioonid_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">isikukood</td> <td>string</td> <td>1</td> <td>Isikukood</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">nimetus</td> <td>string</td> <td>1</td> <td>Eksami aine</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kood</td> <td>string</td> <td>1</td> <td>Eksami aine kood</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kursus</td> <td>string</td> <td>0...1</td> <td>Kursus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">keeletase</td> <td>string</td> <td>0...1</td> <td>Keeleoskuse tase</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kuupaev</td> <td>string</td> <td>1</td> <td>Eksami toimumise kuupäev</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tulemus</td> <td>string</td> <td>1</td> <td>Tulemus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">keele_kood</td> <td>string</td> <td>0...1</td> <td>Eksami sooritamise keele kood</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">keele_nimetus</td> <td>string</td> <td>0...1</td> <td>Eksami sooritamise keele nimetus</td></tr></table>
+<h2>riigikeeletase - Riigikeele tasemeeksami sooritatuse kontroll</h2>
+<div class="document">
+
+
+<p>Teenus maanteeametile riigikeele taseme olemasolu kontrollimiseks</p>
+<p>Teenus kontrollib, kas sisendis oleva isikukoodiga isik on kunagi sooritanud tasemeeksami või riigieksami või põhikooli lõpueksami aines „riigikeel“ või „eesti keel teise keelena“, millel saanud sisendis oleva taseme või sellest kõrgema taseme. Kui sooritus leitakse, väljastatakse väljundis „true“ ning isikul on antud keeleoskuse tase olemas. Kui sooritust ei leita, siis ei ole taseme olemasolu teada (mitteametlikult loetakse B1 taseme vääriliseks ka eestikeelse kooli lõpetanud, kuid EIS ei väljasta infot selle kohta, mis keeles kooli on keegi lõpetanud).</p>
+</div>
+<h3 id="desc_riigikeeletase_in">Sisend </h3><table border="1" aria-describedby="desc_riigikeeletase_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>riigikeeletase_paring (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">isikukood</td> <td>string</td> <td>1</td> <td>Isikukood</td></tr><tr><td class="level"> </td> <td colspan="6">tase</td> <td>string</td> <td>1</td> <td>Keeleoskuse tase<br/>A1 - <br/>A2 - <br/>B1 - <br/>B2 - <br/>C1 - <br/>C2 - </td></tr></table><h3 id="desc_riigikeeletase_out">Väljund </h3><table border="1" aria-describedby="desc_riigikeeletase_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>riigikeeletase_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">sooritatud</td> <td>boolean</td> <td>0...1</td> <td>Kas küsitud taseme (või sellest kõrgema taseme) riigikeeleeksam on sooritatud<br/>
+                  true - eksam on sooritatud, tase on olemas
+                  false - eksamisooritust ei ole, taseme olemasolu ei ole teada
+                </td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>0...1</td> <td>Veateade</td></tr></table>
+<h2>riigikeeletase_ehis - Riigikeele tasemeeksami tase (EHISele)</h2>
+<div class="document">
+
+
+<p>Teenus EHISele riigikeele taseme pärimiseks.</p>
+<p>Teenus on loodud selleks, et EHIS saaks pärida õpetajate riigikeeleoskuse tasemeid.
+Teenus otsib sisendis olevate isikukoodidega isikute testisooritused, mis on andnud riigikeele oskuse taseme (tasemeeksamid, riigieksamid ja põhikooli lõpueksamid ainetes eesti keel teise keelena või riigikeel).
+Kui sisendis on antud ajavahemiku alguse või lõpu aeg, siis antakse isiku kohta andmeid välja ainult juhul, kui isikul leidub mõni selline riigikeele oskust mõõtev testisooritus, mille tulemust on antud ajavahemikul muudetud.
+Iga isiku kohta leitakse kõrgeim saadud riigikeeleoskuse tase. Varem kasutatud tasemed väljastatakse uue taseme koodiga: kõrgtaseme asemel näidatakse tasemeks C1, kesktaseme asemel B2, algtaseme asemel B1.
+Leitud andmed väljastatakse ZIP-pakitud CSV-failina (väljade eraldaja semikoolon), milles on:
+•       isikukood;
+•       tulemuse viimase muutmise kuupäev;
+•       tunnistuse väljastamise kuupäev;
+•       tunnistuse number.
+Tulemuse viimase muutmise kuupäev kirjeldab selle testisoorituse tulemuse viimase muutmise kuupäeva, millest saadi kõrgeim tase. See ei pruugi olla isiku viimane keeleoskuse taseme muutmise kuupäev (nt võib isik olla mõnel hilisemal eksamil saanud kõrgema taseme, mis on hiljem tühistatud). Kui tunnistust ei ole avaldatud, siis on tunnistuse väljastamise kuupäev ja tunnistuse numbrid tühjad.
+Kui sisendi isikukoode ei ole palju, siis on võimalik need esitada ka ilma manust kasutamata, elemendi „isikukoodid“ tekstilise väärtusena (sel juhul ilma ZIP-pakkimiseta).</p>
+</div>
+<h3 id="desc_riigikeeletase_ehis_in">Sisend (MIME)</h3><table border="1" aria-describedby="desc_riigikeeletase_ehis_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>riigikeeletase_ehis_paring (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">alates</td> <td>dateTime</td> <td>0...1</td> <td>Tulemuste muutmise ajavahemiku algus</td></tr><tr><td class="level"> </td> <td colspan="6">kuni</td> <td>dateTime</td> <td>0...1</td> <td>Tulemuste muutmise ajavahemiku lõpp</td></tr><tr><td class="level"> </td> <td colspan="6">isikukoodid</td> <td>base64Binary</td> <td>1</td> <td>Isikukoodide fail ZIP-pakitud manusena, isikukoodid eraldatud tühiku või reavahetusega</td></tr></table><h3 id="desc_riigikeeletase_ehis_out">Väljund (MIME)</h3><table border="1" aria-describedby="desc_riigikeeletase_ehis_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>riigikeeletase_ehis_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">paringuaeg</td> <td>dateTime</td> <td>1</td> <td>Päringu sooritamise aeg</td></tr><tr><td class="level"> </td> <td colspan="6">veateade</td> <td>string</td> <td>0...1</td> <td>Veateade (esineb juhul, kui päringu töötlemisel tekkis viga)</td></tr><tr><td class="level"> </td> <td colspan="6">data</td> <td>base64Binary</td> <td>0...1</td> <td>
+                  ZIP-pakitud CSV fail manusena. Fail esineb juhul, kui päringu töötlemisel ei tekkinud vigu ning leidub sisendi tingimustele vastavaid andmeid.
+                  Faili igal real on:
+                  isikukood;keeleoskuse tase;antud taseme tulemuse viimase muutmise kuupäev YYY-MM-DD;tunnistuse väljastamise kuupäev YYYY-MM-DD;tunnistuse nr
+                </td></tr></table>
+<h2>e_tunnistus_am_notar - E-tunnistuse allalaadimine (notaritele)</h2>
+<div class="document">
+
+
+<p>Tunnistuse ID järgi tunnistuse .ddoc faili alla laadimine.
+Teenuse e_tunnistus_am koopia.</p>
+</div>
+<h3 id="desc_e_tunnistus_am_notar_in">Sisend </h3><table border="1" aria-describedby="desc_e_tunnistus_am_notar_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>e_tunnistus_am_paring (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus_id</td> <td>integer</td> <td>1</td> <td>E-tunnistuse id</td></tr></table><h3 id="desc_e_tunnistus_am_notar_out">Väljund (MIME)</h3><table border="1" aria-describedby="desc_e_tunnistus_am_notar_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>e_tunnistus_am_vastus (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus</td> <td>base64Binary</td> <td>1</td> <td>E-tunnistus</td></tr></table>
+<h2>e_tunnistus_am - E-tunnistuse allalaadimine (ametnikule)</h2>
+<div class="document">
+
+
+<p>Tunnistuse ID järgi tunnistuse .asice/.ddoc/.bdoc faili alla laadimine</p>
+</div>
+<h3 id="desc_e_tunnistus_am_in">Sisend </h3><table border="1" aria-describedby="desc_e_tunnistus_am_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>e_tunnistus_am_paring (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus_id</td> <td>integer</td> <td>1</td> <td>E-tunnistuse id</td></tr></table><h3 id="desc_e_tunnistus_am_out">Väljund (MIME)</h3><table border="1" aria-describedby="desc_e_tunnistus_am_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>e_tunnistus_am_vastus (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus</td> <td>base64Binary</td> <td>1</td> <td>E-tunnistus</td></tr></table>
+<h2>e_tunnistus_kehtivus - E-tunnistuse kehtivuse kontroll</h2>10 minuti jooksul 3 korda järjest valede andmete sisestamisel blokeeritakse teenuse kasutamine Teile 24 tunniks.
+<div class="document">
+
+
+<p>Tunnistuse kehtivuse kontrollimine ja tunnistuse .asice/.ddoc/.bdoc faili allalaadimine.
+Kui 10 minuti jooksul esitatakse 3 korda sisendandmeid, millele tunnistusi ei vasta, siis blokeeritakse teenuse kasutamine 24 tunniks.</p>
+</div>
+<h3 id="desc_e_tunnistus_kehtivus_in">Sisend </h3><table border="1" aria-describedby="desc_e_tunnistus_kehtivus_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>e_tunnistus_kehtivus_paring (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">isikukood</td> <td>string</td> <td>1</td> <td>E-tunnistuse omaniku isikukood</td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus_nr</td> <td>string</td> <td>1</td> <td>E-tunnistuse unikaalne number</td></tr></table><h3 id="desc_e_tunnistus_kehtivus_out">Väljund (MIME)</h3><table border="1" aria-describedby="desc_e_tunnistus_kehtivus_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>e_tunnistus_kehtivus_vastus (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">nimi</td> <td>string</td> <td>1</td> <td>E-tunnistuse omaniku ees- ja perekonnanimi</td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus_nr</td> <td>string</td> <td>1</td> <td>E-tunnistuse number</td></tr><tr><td class="level"> </td> <td colspan="6">kehtiv</td> <td>t_kehtiv (string)</td> <td>1</td> <td>E-tunnistuse olek<br/>0 - Kehtetu<br/>1 - Kehtiv</td></tr><tr><td class="level"> </td> <td colspan="6">eksam_jada</td> <td>sequence</td> <td>1</td> <td>Registreeritud riigieksamid</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>re_eksam_jada_item (all)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">nimetus</td> <td>string</td> <td>1</td> <td>Eksami aine</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aeg</td> <td>string</td> <td>1</td> <td>Toimumise aeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">staatus</td> <td>string</td> <td>1</td> <td>Staatus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tulemus</td> <td>string</td> <td>1</td> <td>Tulemus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">id</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">on_osatulemus</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus</td> <td>base64Binary</td> <td>1</td> <td>LAADI ALLA E-TUNNISTUS</td></tr></table>
+<h2>e_tunnistus_list_notar - E-tunnistuste otsing (notaritele)</h2>
+<div class="document">
+
+
+<p>Tunnistuste loetelu päring notaritele.
+Väljastatakse sisendis olnud isikukoodiga isiku kõigi tunnistuste loetelu.</p>
+</div>
+<h3 id="desc_e_tunnistus_list_notar_in">Sisend </h3><table border="1" aria-describedby="desc_e_tunnistus_list_notar_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>e_tunnistus_list_notar_paring (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">isikukood</td> <td>string</td> <td>1</td> <td>Isikukood</td></tr></table><h3 id="desc_e_tunnistus_list_notar_out">Väljund </h3><table border="1" aria-describedby="desc_e_tunnistus_list_notar_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>e_tunnistus_list_notar_vastus (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">e_tunnistus_jada</td> <td>sequence</td> <td>1</td> <td>E-tunnistused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>e_tunnistus_jada_item (all)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tunnistus_id</td> <td>integer</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tunnistus_nr</td> <td>string</td> <td>1</td> <td>E-tunnistuse number</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">nimi</td> <td>string</td> <td>1</td> <td>Eksaminandi nimi</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">isikukood</td> <td>string</td> <td>1</td> <td>Isikukood</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aasta</td> <td>integer</td> <td>1</td> <td>E-Tunnistuse aasta</td></tr></table>
+<h2>riigieksamid_ehis - Riigieksamite andmed EHISele</h2>
+<div class="document">
+
+
+<p>Väljastatakse parameetriks antud isikukoodidega isikute riigieksamisoorituste andmed.</p>
+<p>Sisendiks antakse komaga eraldatud stringi kujul isikukoodide loetelu.
+Väljundi parameeter ret64 sisaldab base64-kodeeritud ZIP-pakitud tekstifaili, milles on riigieksamitulemuste andmed.
+Väljastatakse need riigieksamisooritused, mille tulemused on kinnitatud ja avaldatud. Kui sooritaja on samas aines teinud mitu riigieksamit, siis väljastatakse neist ainult kõige parema tulemusega soorituse andmed.
+Tekstifailis on iga testisooritaja kohta üks rida kujul:
+isikukood,ainekood,pallid,taidetud</p>
+<p>kus taidetud väärtus on 1 (õpilasel on täidetud lõpetamise tingimused) või 0 (õpilasel pole täidetud lõpetamise tingimused).</p>
+</div>
+<h3 id="desc_riigieksamid_ehis_in">Sisend </h3><table border="1" aria-describedby="desc_riigieksamid_ehis_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>riigieksamid_ehis_paring (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">isikukoodid</td> <td>string</td> <td>1</td> <td>Isikukoodid </td></tr></table><h3 id="desc_riigieksamid_ehis_out">Väljund </h3><table border="1" aria-describedby="desc_riigieksamid_ehis_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>riigieksamid_ehis_vastus (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">kood</td> <td>string</td> <td>1</td> <td>kood</td></tr><tr><td class="level"> </td> <td colspan="6">ret64</td> <td>string</td> <td>1</td> <td>Vastuse andmed (zip fail, base64)</td></tr></table>
+<h2>pohikoolieksamid_ehis - Põhikooli lõpueksamite tulemused EHISele</h2>
+<div class="document">
+
+
+<p>Teenus väljastab sisendis antud isikukoodidega isikute põhikooli lõpueksamite tulemused.
+Väljastatakse tehtud, puudunud, katkestanud ja eemaldatud testisooritused,
+kui testimiskorra koondtulemused on avaldatud ja toimumise protokoll on kinnitatud.
+Kui samas õppeaines on mitu testisooritust, siis väljastatakse neist üksainus
+(parima tulemusega).</p>
+</div>
+<h3 id="desc_pohikoolieksamid_ehis_in">Sisend </h3><table border="1" aria-describedby="desc_pohikoolieksamid_ehis_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>pohikoolieksamid_ehis_paring (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">isikukoodid</td> <td>sequence</td> <td>1</td> <td>Isikukoodid</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">isikukood</td> <td>string</td> <td>0...</td> <td></td></tr></table><h3 id="desc_pohikoolieksamid_ehis_out">Väljund </h3><table border="1" aria-describedby="desc_pohikoolieksamid_ehis_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>pohikoolieksamid_ehis_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">oppurid</td> <td>sequence</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">oppur</td> <td>pohikoolieksamid_ehis_oppur (all)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">isikukood</td> <td>string</td> <td>1</td> <td>Isikukood</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">oppeained</td> <td>sequence</td> <td>1</td> <td>Eksamite tulemused</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="3">oppeaine</td> <td>pohikoolieksamid_ehis_oppeaine (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">kl_aine</td> <td>string</td> <td>1</td> <td>Õppeaine kood</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">kl_hinne</td> <td>integer</td> <td>0...1</td> <td>Hinne</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">osakaal</td> <td>float</td> <td>0...1</td> <td>Tulemus protsentides</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">sooritamata</td> <td>boolean</td> <td>1</td> <td>Sooritamata</td></tr></table>
+<h2>testsessioonid_kod - Minu testsessioonid</h2>
+<div class="document">
+
+
+<p>Väljastatakse loetelu testsessioonidest, mille testidel päringu sooritaja on osalenud.
+Arvestatakse ainult kodakondsusseksamite, tasemeeksamite, põhikooli lõpueksamite, riigieksamite ja rahvusvaheliste eksamite testsessioone.
+Mõeldud kasutamiseks riigiportaalist ja haridusportaalist.</p>
+</div>
+<h3 id="desc_testsessioonid_kod_in">Sisend </h3><table border="1" aria-describedby="desc_testsessioonid_kod_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">testsessioonid_kod</td> <td>sequence</td> <td>1</td> <td></td></tr></table><h3 id="desc_testsessioonid_kod_out">Väljund </h3><table border="1" aria-describedby="desc_testsessioonid_kod_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>testsessioonid_kod_vastus (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">testsessioonid_kod_jada</td> <td>sequence</td> <td>1</td> <td>Testsessiooni testidel osalemine</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>testsessioonid_kod_jada_item (all)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">nimi</td> <td>string</td> <td>1</td> <td>Testsessioon</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">oppeaasta</td> <td>string</td> <td>1</td> <td>Õppeaasta</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">testsessioon_id</td> <td>integer</td> <td>1</td> <td>Testsessiooni id</td></tr></table>
+<h2>testid_kod - Minu testid</h2>
+<div class="document">
+
+
+<p>Väljastatakse andmed päringu sooritaja osalemise kohta antud testsessiooni testidel.
+Arvestatakse ainult kodakondsusseksamite, tasemeeksamite, põhikooli lõpueksamite, riigieksamite ja rahvusvaheliste tulemusi.
+Mõeldud kasutamiseks riigiportaalist ja haridusportaalist.</p>
+</div>
+<h3 id="desc_testid_kod_in">Sisend </h3><table border="1" aria-describedby="desc_testid_kod_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>testid_kod_paring (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">testsessioon_id</td> <td>integer</td> <td>1</td> <td>Testsessiooni id</td></tr></table><h3 id="desc_testid_kod_out">Väljund </h3><table border="1" aria-describedby="desc_testid_kod_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>testid_kod_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">testid_kod_jada</td> <td>sequence</td> <td>1</td> <td>Testidel osalemine</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>testid_kod_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">test_nimi</td> <td>string</td> <td>0...1</td> <td>Testi nimi</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">osa_nimi</td> <td>string</td> <td>0...1</td> <td>Testiosa nimi</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">osa_kuupaev</td> <td>date</td> <td>0...1</td> <td>Testiosa toimumise aeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">osa_koht</td> <td>string</td> <td>0...1</td> <td>Testiosa toimumise koht</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">osa_aadress</td> <td>string</td> <td>0...1</td> <td>Testiosa toimumise koha aadress</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">staatus</td> <td>string</td> <td>1</td> <td>Staatus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tulemus</td> <td>string</td> <td>1</td> <td>Tulemus</td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus_id</td> <td>integer</td> <td>0...1</td> <td></td></tr></table>
+<h2>tulemused_riigiportaali - Riigieksamitulemuste esitamine riigiportaali</h2>
+<div class="document">
+
+
+<p>Teenus võimaldab riigieksamite tulemusi puhverdada riigiportaalis. Teenuse kirjeldus asub eraldi dokumendis.</p>
+</div>
+<h3 id="desc_tulemused_riigiportaali_in">Sisend </h3><table border="1" aria-describedby="desc_tulemused_riigiportaali_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>tulemused_riigiportaali_paring (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">alates</td> <td>dateTime</td> <td>0...1</td> <td>Aeg, millest alates tehtud muudatusi päritakse</td></tr><tr><td class="level"> </td> <td colspan="6">alates_id</td> <td>integer</td> <td>0...1</td> <td>Testisoorituse ID, millest väiksema ID-ga kirjeid ei väljastata</td></tr><tr><td class="level"> </td> <td colspan="6">aasta</td> <td>integer</td> <td>0...1</td> <td>Testimiskorra aasta</td></tr><tr><td class="level"> </td> <td colspan="6">max_arv</td> <td>integer</td> <td>0...1</td> <td>Maksimaalne korraga väljastatavate soorituskirjete arv</td></tr></table><h3 id="desc_tulemused_riigiportaali_out">Väljund </h3><table border="1" aria-describedby="desc_tulemused_riigiportaali_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>tulemused_riigiportaali_vastus (choice)</td> <td>1</td> <td></td></tr></table>
+<h2>e_tunnistus_kod - Minu tunnistus</h2>
+<div class="document">
+
+
+<p>Tunnistuse allalaadimine. Mõeldud kasutamiseks riigiportaalist komplekspäringu koosseisus.</p>
+</div>
+<h3 id="desc_e_tunnistus_kod_in">Sisend </h3><table border="1" aria-describedby="desc_e_tunnistus_kod_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>e_tunnistus_kod_paring (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus_id</td> <td>integer</td> <td>1</td> <td>E-tunnistuse id</td></tr></table><h3 id="desc_e_tunnistus_kod_out">Väljund (MIME)</h3><table border="1" aria-describedby="desc_e_tunnistus_kod_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>e_tunnistus_kod_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">tunnistusenr</td> <td>string</td> <td>1</td> <td>Tunnistuse nr</td></tr><tr><td class="level"> </td> <td colspan="6">valjastamisaeg</td> <td>date</td> <td>1</td> <td>Tunnistuse väljastamise kuupäev</td></tr><tr><td class="level"> </td> <td colspan="6">kehtiv</td> <td>t_kehtiv (string)</td> <td>1</td> <td>Kehtivus<br/>0 - Kehtetu<br/>1 - Kehtiv</td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus</td> <td>base64Binary</td> <td>1</td> <td>E-tunnistus</td></tr></table>
+<h2>load_cl_aine - Õppeainete klassifikaatori laadimine</h2>
+<div class="document">
+
+
+<p>Abiteenus EISis kasutatava õppeainete klassifikaatori allalaadimiseks.</p>
+<p>Klassifikaatori rida väljastatakse elemendina &lt;item&gt;. Elemendi väärtus on õppeaine nimetus. Elemendil on järgmised atribuudid:
+-       riigieksam – 1 või 0 vastavalt sellele, kas on riigieksami aine või mitte
+-       kehtetu – 1, kui õppeaine ei ole enam kasutusel
+-       value – õppeaine klassifikaatori kood</p>
+</div>
+<h3 id="desc_load_cl_aine_in">Sisend </h3><table border="1" aria-describedby="desc_load_cl_aine_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">load_cl_aine</td> <td>sequence</td> <td>1</td> <td></td></tr></table><h3 id="desc_load_cl_aine_out">Väljund </h3><table border="1" aria-describedby="desc_load_cl_aine_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>load_cl_aine_vastus (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">cl_aine</td> <td>clv_jada (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td></td> <td>0...</td> <td></td></tr></table>
+<h2>load_cl_rveksam - Rahvusvaheliselt tunnustatud eksamite klassifikaatori laadimine</h2>
+<div class="document">
+
+
+<p>Abiteenus EISis kasutatava rahvusvaheliselt tunnustatud eksamite klassifikaatori allalaadimiseks.</p>
+<p>Klassifikaatori rida väljastatakse elemendina &lt;item&gt;. Elemendi väärtuseks on eksami nimetus. Elemendil on atribuudud:
+-       aine – õppeaine kood
+-       keeletase – eksami tase (võib puududa)
+-       max_tulemus – maksimaalne võimalik arvuline tulemus (punktid või protsendid, võib puududa)
+-       value – klassifikaatori kood.
+Kui sama klassifikaatoririda on kasutusel mitmes rahvusvahelises eksamis, mille õppeaine, keeleoskuse tase või maksimaalne tulemus on erinevad, siis väljastab teenus iga võimaliku kombinatsiooni eraldi real (st klassifikaatori kood ei ole tulemuste seas unikaalne).</p>
+</div>
+<h3 id="desc_load_cl_rveksam_in">Sisend </h3><table border="1" aria-describedby="desc_load_cl_rveksam_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">load_cl_rveksam</td> <td>sequence</td> <td>1</td> <td></td></tr></table><h3 id="desc_load_cl_rveksam_out">Väljund </h3><table border="1" aria-describedby="desc_load_cl_rveksam_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>load_cl_rveksam_vastus (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">cl_rveksam</td> <td>clrv_jada (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td></td> <td>0...</td> <td></td></tr></table>
+<h2>load_cl - laeb klassifikaatori</h2>
+<div class="document">
+
+
+<p>Klassifikaatorite laadimine eesti.ee portaali kasutajaliidesesse.</p>
+<p>Klassifikaatori rida väljastatakse elemendina &lt;item&gt;, mille sisuks on klassifikaatorirea kood ja nimetus eraldatuna kooloniga. Lisaks on elemendi atribuudi „value“ väärtuseks klassifikaatorirea kood ning atribuudi „label“ väärtuseks nimetus.</p>
+</div>
+<h3 id="desc_load_cl_in">Sisend </h3><table border="1" aria-describedby="desc_load_cl_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">load_cl</td> <td>sequence</td> <td>1</td> <td></td></tr></table><h3 id="desc_load_cl_out">Väljund </h3><table border="1" aria-describedby="desc_load_cl_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>load_cl_vastus (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">cl_tookoht</td> <td>cl_jada (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>string_attr_item</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">cl_amet</td> <td>cl_jada (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>string_attr_item</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">cl_haridus</td> <td>cl_jada (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>string_attr_item</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">cl_kodak</td> <td>cl_jada (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>string_attr_item</td> <td>0...</td> <td></td></tr></table>
+<h2>seis_andmed_kod - EV Põhiseaduse ja Kodakondsuse seaduse tundmise eksami andmed</h2>
+<div class="document">
+
+
+<p>Seaduse tundmise eksami soorituste ja registreeringute andmete väljastamine riigiportaalis.
+Väljastatakse sooritatud eksamite tulemused, avaldatud või kehtetuks tunnistatud tunnistused, registreeringud ja registreeringu testiosade soorituskohad.</p>
+</div>
+<h3 id="desc_seis_andmed_kod_in">Sisend </h3><table border="1" aria-describedby="desc_seis_andmed_kod_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">seis_andmed_kod</td> <td>sequence</td> <td>1</td> <td></td></tr></table><h3 id="desc_seis_andmed_kod_out">Väljund </h3><table border="1" aria-describedby="desc_seis_andmed_kod_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>seis_andmed_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">nimi</td> <td>string</td> <td>1</td> <td>Nimi</td></tr><tr><td class="level"> </td> <td colspan="6">eksamitulemus_jada</td> <td>sequence</td> <td>1</td> <td>EV põhiseaduse ja kodakondsuse seaduse tundmise eksami tulemused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>seis_eksam_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aeg</td> <td>string</td> <td>1</td> <td>Toimumise aeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">staatus</td> <td>string</td> <td>1</td> <td>Staatus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tulemus</td> <td>string</td> <td>1</td> <td>Tulemus</td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus_jada</td> <td>sequence</td> <td>1</td> <td>Väljastatud EV põhiseaduse ja kodakondsuse seaduse tundmise eksami tunnistused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>seis_tunnistus_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">nbr</td> <td>string</td> <td>1</td> <td>Tunnistuse number</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kpv</td> <td>string</td> <td>1</td> <td>Tunnistuse väljastamise kuupäev</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kehtiv</td> <td>t_kehtiv (string)</td> <td>1</td> <td>Kehtiv/kehtetu<br/>0 - Kehtetu<br/>1 - Kehtiv</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tunnistus_id</td> <td>integer</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">reg_staatus_jada</td> <td>sequence</td> <td>1</td> <td>EV põhiseaduse ja kodakondsuse seaduse tundmise eksamile registreerimise staatused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>seis_reg_staatus_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kpv</td> <td>string</td> <td>1</td> <td>Avalduse sisestamise kuupäev</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">koht</td> <td>string</td> <td>1</td> <td>Valitud koht ja aeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">staatus</td> <td>string</td> <td>1</td> <td>Staatus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">id</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">dele</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">kohateade_jada</td> <td>sequence</td> <td>1</td> <td>Eksamikoha teade</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>seis_kohateade_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">eksam</td> <td>string</td> <td>1</td> <td>Eksam</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aeg</td> <td>string</td> <td>1</td> <td>Kuupäev / kellaaeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">koht</td> <td>string</td> <td>1</td> <td>Toimumise koht</td></tr></table>
+<h2>teis_andmed_kod - Eesti keele tasemeeksamite andmed</h2>
+<div class="document">
+
+
+<p>Tasemeeksami soorituste ja registreeringute andmete väljastamine riigiportaalis.
+Väljastatakse sooritatud eksamite tulemused, avaldatud või kehtetuks tunnistatud tunnistused, registreeringud ja registreeringu testiosade soorituskohad.</p>
+</div>
+<h3 id="desc_teis_andmed_kod_in">Sisend </h3><table border="1" aria-describedby="desc_teis_andmed_kod_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">teis_andmed_kod</td> <td>sequence</td> <td>1</td> <td></td></tr></table><h3 id="desc_teis_andmed_kod_out">Väljund </h3><table border="1" aria-describedby="desc_teis_andmed_kod_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>teis_andmed_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">nimi</td> <td>string</td> <td>1</td> <td>Nimi</td></tr><tr><td class="level"> </td> <td colspan="6">eksamitulemus_jada</td> <td>sequence</td> <td>1</td> <td>Eesti keele A2, B1, B2 ja C1 tasemete tulemused on esitatud protsentides võimalikust punktisummast</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>teis_eksam_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tase</td> <td>string</td> <td>1</td> <td>Eksami tase</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aeg</td> <td>string</td> <td>1</td> <td>Toimumise aeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">staatus</td> <td>string</td> <td>1</td> <td>Staatus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tulemus</td> <td>string</td> <td>1</td> <td>Tulemus</td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus_jada</td> <td>sequence</td> <td>1</td> <td>Väljastatud eesti keele oskuse tunnistused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>teis_tunnistus_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">nbr</td> <td>string</td> <td>1</td> <td>Tunnistuse number</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kpv</td> <td>string</td> <td>1</td> <td>Tunnistuse väljastamise kuupäev</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kehtiv</td> <td>t_kehtiv (string)</td> <td>1</td> <td>Kehtiv/kehtetu<br/>0 - Kehtetu<br/>1 - Kehtiv</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tunnistus_id</td> <td>integer</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">reg_staatus_jada</td> <td>sequence</td> <td>1</td> <td>Eesti keele tasemeeksamile registreerimise staatused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>teis_reg_staatus_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kpv</td> <td>string</td> <td>1</td> <td>Avalduse sisestamise kuupäev</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">koht</td> <td>string</td> <td>1</td> <td>Valitud tase, koht ja aeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">staatus</td> <td>string</td> <td>1</td> <td>Staatus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">dele</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">id</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">kohateade_jada</td> <td>sequence</td> <td>1</td> <td>Eksamikoha teade</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>teis_kohateade_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">eksam</td> <td>string</td> <td>1</td> <td>Eksam</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aeg</td> <td>string</td> <td>1</td> <td>Kuupäev / kellaaeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">koht</td> <td>string</td> <td>1</td> <td>Toimumise koht</td></tr></table>
+<h2>teis_andmed - Eesti keele tasemeeksamite andmed (ametnikule)</h2>
+<div class="document">
+
+
+<p>Tasemeeksami soorituste ja registreeringute andmete väljastamine riigiportaalis ametnikule.
+Väljastatakse sooritatud eksamite tulemused, avaldatud või kehtetuks tunnistatud tunnistused, registreeringud ja registreeringu testiosade soorituskohad.</p>
+</div>
+<h3 id="desc_teis_andmed_in">Sisend </h3><table border="1" aria-describedby="desc_teis_andmed_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>teis_andmed_paring (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">isikukood</td> <td>string</td> <td>1</td> <td>Isikukood</td></tr></table><h3 id="desc_teis_andmed_out">Väljund </h3><table border="1" aria-describedby="desc_teis_andmed_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>teis_andmed_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">nimi</td> <td>string</td> <td>1</td> <td>Nimi</td></tr><tr><td class="level"> </td> <td colspan="6">eksamitulemus_jada</td> <td>sequence</td> <td>1</td> <td>Eesti keele A2, B1, B2 ja C1 tasemete tulemused on esitatud protsentides võimalikust punktisummast</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>teis_eksam_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tase</td> <td>string</td> <td>1</td> <td>Eksami tase</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aeg</td> <td>string</td> <td>1</td> <td>Toimumise aeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">staatus</td> <td>string</td> <td>1</td> <td>Staatus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tulemus</td> <td>string</td> <td>1</td> <td>Tulemus</td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus_jada</td> <td>sequence</td> <td>1</td> <td>Väljastatud eesti keele oskuse tunnistused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>teis_tunnistus_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">nbr</td> <td>string</td> <td>1</td> <td>Tunnistuse number</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kpv</td> <td>string</td> <td>1</td> <td>Tunnistuse väljastamise kuupäev</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kehtiv</td> <td>t_kehtiv (string)</td> <td>1</td> <td>Kehtiv/kehtetu<br/>0 - Kehtetu<br/>1 - Kehtiv</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tunnistus_id</td> <td>integer</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">reg_staatus_jada</td> <td>sequence</td> <td>1</td> <td>Eesti keele tasemeeksamile registreerimise staatused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>teis_reg_staatus_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kpv</td> <td>string</td> <td>1</td> <td>Avalduse sisestamise kuupäev</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">koht</td> <td>string</td> <td>1</td> <td>Valitud tase, koht ja aeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">staatus</td> <td>string</td> <td>1</td> <td>Staatus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">dele</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">id</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">kohateade_jada</td> <td>sequence</td> <td>1</td> <td>Eksamikoha teade</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>teis_kohateade_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">eksam</td> <td>string</td> <td>1</td> <td>Eksam</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aeg</td> <td>string</td> <td>1</td> <td>Kuupäev / kellaaeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">koht</td> <td>string</td> <td>1</td> <td>Toimumise koht</td></tr></table>
+<h2>seis_andmed - EV Põhiseaduse ja Kodakondsuse seaduse tundmise eksami tulemused ja e-tunnistuse allalaadimine (ametnikule)</h2>
+<div class="document">
+
+
+<p>Seaduse tundmise eksami soorituste ja registreeringute andmete väljastamine riigiportaalis ametnikule.
+Väljastatakse sooritatud eksamite tulemused, avaldatud või kehtetuks tunnistatud tunnistused, registreeringud ja registreeringu testiosade soorituskohad.</p>
+</div>
+<h3 id="desc_seis_andmed_in">Sisend </h3><table border="1" aria-describedby="desc_seis_andmed_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>seis_andmed_paring (all)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">isikukood</td> <td>string</td> <td>1</td> <td>Isikukood: </td></tr></table><h3 id="desc_seis_andmed_out">Väljund </h3><table border="1" aria-describedby="desc_seis_andmed_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>seis_andmed_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">nimi</td> <td>string</td> <td>1</td> <td>Nimi</td></tr><tr><td class="level"> </td> <td colspan="6">eksamitulemus_jada</td> <td>sequence</td> <td>1</td> <td>EV põhiseaduse ja kodakondsuse seaduse tundmise eksami tulemused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>seis_eksam_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aeg</td> <td>string</td> <td>1</td> <td>Toimumise aeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">staatus</td> <td>string</td> <td>1</td> <td>Staatus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tulemus</td> <td>string</td> <td>1</td> <td>Tulemus</td></tr><tr><td class="level"> </td> <td colspan="6">tunnistus_jada</td> <td>sequence</td> <td>1</td> <td>Väljastatud EV põhiseaduse ja kodakondsuse seaduse tundmise eksami tunnistused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>seis_tunnistus_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">nbr</td> <td>string</td> <td>1</td> <td>Tunnistuse number</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kpv</td> <td>string</td> <td>1</td> <td>Tunnistuse väljastamise kuupäev</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kehtiv</td> <td>t_kehtiv (string)</td> <td>1</td> <td>Kehtiv/kehtetu<br/>0 - Kehtetu<br/>1 - Kehtiv</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">tunnistus_id</td> <td>integer</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">reg_staatus_jada</td> <td>sequence</td> <td>1</td> <td>EV põhiseaduse ja kodakondsuse seaduse tundmise eksamile registreerimise staatused</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>seis_reg_staatus_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kpv</td> <td>string</td> <td>1</td> <td>Avalduse sisestamise kuupäev</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">koht</td> <td>string</td> <td>1</td> <td>Valitud koht ja aeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">staatus</td> <td>string</td> <td>1</td> <td>Staatus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">id</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">dele</td> <td>string</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">kohateade_jada</td> <td>sequence</td> <td>1</td> <td>Eksamikoha teade</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>seis_kohateade_jada_item (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">eksam</td> <td>string</td> <td>1</td> <td>Eksam</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">aeg</td> <td>string</td> <td>1</td> <td>Kuupäev / kellaaeg</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">koht</td> <td>string</td> <td>1</td> <td>Toimumise koht</td></tr></table>
+<h2>teis_del_kod - Eesti keele tasemeeksami registreerimise tühistamine</h2>
+<div class="document">
+
+
+<p>Leitakse sisendis antud registreering. Kontrollitakse, et see on sama kasutaja tasemeeksami registreering ning seda on võimalik tühistada. Kui on võimalik tühistada, siis tühistatakse.</p>
+</div>
+<h3 id="desc_teis_del_kod_in">Sisend </h3><table border="1" aria-describedby="desc_teis_del_kod_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>teis_del_kod_paring (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">id</td> <td>string</td> <td>1</td> <td>id</td></tr></table><h3 id="desc_teis_del_kod_out">Väljund </h3><table border="1" aria-describedby="desc_teis_del_kod_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>teis_del_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr></table>
+<h2>seis_del_kod - EV seaduse eksami reg tühistamine</h2>
+<div class="document">
+
+
+<p>Seaduse tundmise eksami registreerimise tühistamine.
+Leitakse sisendis antud registreering. Kontrollitakse, et see on sama kasutaja seaduse tundmise eksami registreering ning seda on võimalik tühistada. Kui on võimalik tühistada, siis tühistatakse.</p>
+</div>
+<h3 id="desc_seis_del_kod_in">Sisend </h3><table border="1" aria-describedby="desc_seis_del_kod_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>seis_del_kod_paring (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">id</td> <td>string</td> <td>1</td> <td>id</td></tr></table><h3 id="desc_seis_del_kod_out">Väljund </h3><table border="1" aria-describedby="desc_seis_del_kod_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>seis_del_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>1</td> <td>Teade</td></tr></table>
+<h2>plank_vabad - Kooli vabad plangid</h2><h3 id="desc_plank_vabad_in">Sisend </h3><table border="1" aria-describedby="desc_plank_vabad_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>plank_vabad_paring (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">kool_id</td> <td>integer</td> <td>1</td> <td>Kooli ID</td></tr><tr><td class="level"> </td> <td colspan="6">oppetase</td> <td>oppetase (string)</td> <td>0...1</td> <td>Õppetase<br/>y - Üldharidus<br/>u - Kutseharidus<br/>o - Kõrgharidus</td></tr><tr><td class="level"> </td> <td colspan="6">liik_id</td> <td>integer</td> <td>0...1</td> <td>Plangiliigi ID</td></tr></table><h3 id="desc_plank_vabad_out">Väljund </h3><table border="1" aria-describedby="desc_plank_vabad_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>plank_vabad_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">teade</td> <td>string</td> <td>0...1</td> <td>Teade</td></tr><tr><td class="level"> </td> <td colspan="6">kogus</td> <td>integer</td> <td>1</td> <td>Vabade plankide kogus</td></tr><tr><td class="level"> </td> <td colspan="6">plangijada</td> <td>sequence</td> <td>1</td> <td>Vabad plangid</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>plank_vaba_liik (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">oppetase</td> <td>oppetase (string)</td> <td>1</td> <td>Õppetase<br/>y - Üldharidus<br/>u - Kutseharidus<br/>o - Kõrgharidus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">liik_id</td> <td>integer</td> <td>1</td> <td>Plangiliigi ID</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">nimetus</td> <td>string</td> <td>1</td> <td>Plangiliigi nimetus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">vahemikud</td> <td>sequence</td> <td>1</td> <td>Vahemikud</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="3">item</td> <td>plank_vaba_vahemik (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">alates</td> <td>string</td> <td>0...1</td> <td>Vahemiku algus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">kuni</td> <td>string</td> <td>0...1</td> <td>Vahemiku lõpp</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="2">kogus</td> <td>integer</td> <td>1</td> <td>Plankide arv vahemikus</td></tr></table>
+<h2>plank_valjasta - Lõpudokumentide plankide väljastamine lõpetajatele</h2><h3 id="desc_plank_valjasta_in">Sisend </h3><table border="1" aria-describedby="desc_plank_valjasta_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>plank_valjasta_paring (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">plangijada</td> <td>sequence</td> <td>1</td> <td>Väljastatud plangid</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>plank_valjasta_plank (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kool_id</td> <td>integer</td> <td>1</td> <td>Kooli ID</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">plank_nr</td> <td>string</td> <td>1</td> <td>Plangi nr</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">oppetase</td> <td>oppetase (string)</td> <td>1</td> <td>Õppetase<br/>y - Üldharidus<br/>u - Kutseharidus<br/>o - Kõrgharidus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">oppekava</td> <td>string</td> <td>0...1</td> <td>Õppekava kood</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">medal</td> <td>integer</td> <td>0...1</td> <td>Lisaks plangile väljastav medal<br/>1 - Kuldmedal<br/>2 - Hõbemedal</td></tr></table><h3 id="desc_plank_valjasta_out">Väljund </h3><table border="1" aria-describedby="desc_plank_valjasta_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>plank_valjasta_vastus (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">valjastatud_kogus</td> <td>integer</td> <td>1</td> <td>Väljastatuks märgitud plankide arv</td></tr><tr><td class="level"> </td> <td colspan="6">vead</td> <td>sequence</td> <td>1</td> <td>Plangid, mida ei olnud võimalik väljastatuks märkida</td></tr><tr><td class="level"> </td><td class="level"> </td> <td colspan="5">item</td> <td>plank_valjasta_viga (sequence)</td> <td>0...</td> <td></td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">kool_id</td> <td>integer</td> <td>1</td> <td>Kooli ID</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">plank_nr</td> <td>string</td> <td>1</td> <td>Plangi nr</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">oppetase</td> <td>oppetase (string)</td> <td>1</td> <td>Õppetase<br/>y - Üldharidus<br/>u - Kutseharidus<br/>o - Kõrgharidus</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">oppekava</td> <td>string</td> <td>1</td> <td>Õppekava kood</td></tr><tr><td class="level"> </td><td class="level"> </td><td class="level"> </td> <td colspan="4">veateade</td> <td>string</td> <td>1</td> <td>Veateade</td></tr></table>
+<h2>legacyX - Riigieksamitele registreerimine</h2>
+<div class="document">
+
+
+<p>Riigiportaali autenditud kasutaja suunamine EISi riigieksamitele registreerimise vormile. Teenusega genereeritakse EISis unikaalne ühekordselt kasutatav URL, mis seotakse teenuse kasutaja identiteediga. Riigiportaal suunab kasutaja sellele URLile, EIS loeb kasutaja autendituks ilma täiendava sisse logimiseta ning avab soovitud liiki eksamitele registreerimise vormi.</p>
+</div>
+<h3 id="desc_legacyX_in">Sisend </h3><table border="1" aria-describedby="desc_legacyX_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>ArrayOfString (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">item</td> <td>string</td> <td>0...</td> <td></td></tr></table><h3 id="desc_legacyX_out">Väljund </h3><table border="1" aria-describedby="desc_legacyX_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>legacy_response (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">url</td> <td>string</td> <td>1</td> <td></td></tr></table>
+<h2>legacyTE - Eesti keele tasemeeksamile registreerimine</h2>
+<div class="document">
+
+
+<p>Riigiportaali autenditud kasutaja suunamine EISi tasemeeksamite registreerimise vormile. Teenusega genereeritakse EISis unikaalne ühekordselt kasutatav URL, mis seotakse teenuse kasutaja identiteediga. Riigiportaal suunab kasutaja sellele URLile, EIS loeb kasutaja autendituks ilma täiendava sisse logimiseta ning avab soovitud liiki eksamitele registreerimise vormi.</p>
+</div>
+<h3 id="desc_legacyTE_in">Sisend </h3><table border="1" aria-describedby="desc_legacyTE_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>ArrayOfString (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">item</td> <td>string</td> <td>0...</td> <td></td></tr></table><h3 id="desc_legacyTE_out">Väljund </h3><table border="1" aria-describedby="desc_legacyTE_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>legacy_response (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">url</td> <td>string</td> <td>1</td> <td></td></tr></table>
+<h2>legacySE - Põhiseaduse ja kodakondsuse seaduse tundmise eksamile registreerimine</h2>
+<div class="document">
+
+
+<p>Riigiportaali autenditud kasutaja suunamine EISi põhiseaduse ja kodakondsuse seaduse tundmise eksamitele registreerimise vormile. Teenusega genereeritakse EISis unikaalne ühekordselt kasutatav URL, mis seotakse teenuse kasutaja identiteediga. Riigiportaal suunab kasutaja sellele URLile, EIS loeb kasutaja autendituks ilma täiendava sisse logimiseta ning avab soovitud liiki eksamitele registreerimise vormi.</p>
+</div>
+<h3 id="desc_legacySE_in">Sisend </h3><table border="1" aria-describedby="desc_legacySE_in"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">request</td> <td>ArrayOfString (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">item</td> <td>string</td> <td>0...</td> <td></td></tr></table><h3 id="desc_legacySE_out">Väljund </h3><table border="1" aria-describedby="desc_legacySE_out"><tr> <th colspan="7">Välja nimi</th> <th>Tüüp</th> <th>Kordsus</th> <th>Selgitus</th></tr><tr> <td colspan="7">response</td> <td>legacy_response (sequence)</td> <td>1</td> <td></td></tr><tr><td class="level"> </td> <td colspan="6">url</td> <td>string</td> <td>1</td> <td></td></tr></table>
+</body></html>

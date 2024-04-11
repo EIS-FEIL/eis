@@ -1,0 +1,312 @@
+## -*- coding: utf-8 -*- 
+## Testiosa hindamine
+<%inherit file="/avalik/sooritamine/testiosasisu.mako"/>
+
+<%def name="main_table()">
+<%
+  alatestid = []
+  sooritusylesanded = c.sooritusylesanded
+  komplekt = c.komplekt
+%>
+% if c.ignore_ty_id:
+${h.alert_notice(_("Hindajale ei kuvata {n} ülesannet, kus ei ole käsitsi hinnatavaid vastuseid").format(n=len(c.ignore_ty_id)))}
+% endif
+
+% if c.hindamiskogum.on_kriteeriumid:
+  ${self.audio_play_all()}
+  ## kuvame hindamiskogumi kõik ylesanded korraga
+  <% c.on_kriteeriumid = True %>
+  ${self.kogumid()}
+   % for n_ty, syl in enumerate(c.sooritusylesanded):
+    ${self.testiylesandesisu_inc((n_ty, syl, c.komplekt))}
+   % endfor
+   <script>
+     $(function(){
+     $('div.div_ty').each(function(){
+     ty_show(this.id, false, true);
+     });
+     });
+  </script>
+  ${self.js_punktid()}
+  ${self.tbl_hindamine_kriteeriumid()}
+% else:
+   <div class="row">
+     <div class="col-2">
+       ${self.nav_bar(False, alatestid, sooritusylesanded, komplekt, None)}
+     </div>
+     <div class="col-10">
+       ${self.task_contents(sooritusylesanded, komplekt)}
+     </div>
+   </div>
+% endif   
+</%def>
+
+<%def name="task_contents(sooritusylesanded, komplekt)">
+<div>
+  % if not c.hindamine.komplekt:
+        % if c.testiosa.lahliik_kood == const.LAHLIIK_E:
+         ${h.alert_error(_("Testi pole sooritatud"), False)}
+        % else:
+         ${h.alert_info(_("Palun vali ülesandekomplekt"), False)}
+        % endif
+  % else:
+      % for n_ty, syl in enumerate(sooritusylesanded):
+      ${self.testiylesandesisu_inc((n_ty, syl, komplekt))}
+      % endfor
+      % if c.current_ty_id:
+      <script>
+        $(function(){
+        ty_show('ty_${c.current_ty_id}_0', false);
+        });
+      </script>
+      % endif
+      
+      ${self.js_punktid()}
+  % endif
+  ${self.choose_variant()}
+</div>
+</%def>
+
+<%def name="testiylesandesisu_inc(tys_params)">
+<% c.tys_params = tys_params %>
+<%include file="testiylesandesisu.mako"/>
+</%def>
+
+<%def name="audio_play_all()">
+<%
+  # ES-977
+  # kas on audio sisuplokke?
+  yv_id_list = [syl.svalik.valitudylesanne.id for syl in c.sooritusylesanded if syl.svalik]
+  q = (model.session.query(model.sa.func.count(model.Kvsisu.id))
+       .join(model.Kvsisu.kysimusevastus)
+       .filter(model.Kysimusevastus.ylesandevastus_id.in_(yv_id_list))
+       .join(model.Kysimusevastus.kysimus)
+       .join(model.Kysimus.sisuplokk)
+       .filter(model.Sisuplokk.tyyp==const.INTER_AUDIO))
+  audio_cnt = q.scalar()
+%>
+% if audio_cnt > 1:
+  ${h.checkbox('all_audio', 1, label=_("Mängi kõik helivastused järjest"), onclick="audio_play_all()")}
+
+<script>
+  function audio_play_all()
+  {
+  var audios = $('iframe').contents().find('.spt-audioInteraction audio');
+  audios.off('ended');
+  if($('input[name="all_audio"]').prop('checked'))
+  {
+    for(var i=0; i<audios.length-1; i++){
+      $(audios[i]).on('ended', function(){
+         audios[audios.index(this)+1].play();
+      });                            
+    }
+    audios[0].play();
+   }
+  }
+</script>
+% endif
+</%def>
+
+<%def name="js_punktid()">
+      <script>
+var wnd_yl = null;
+function popup_yl(url)
+{
+    wnd_yl = window.open(url, "wnd_yl", "directories=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=1");
+}
+function set_nullipohj()
+{
+    var is_zero = $(this).val() == '0';
+    var nullipohj = $(this).closest('tr').find('select[name$=nullipohj_kood]');
+    nullipohj.attr('disabled', !is_zero);
+    if(is_zero) nullipohj.focus(); else nullipohj.val('');
+}
+
+## aspekti punktide järgi leitakse punktide kirjeldus ja kopeeritakse märkuste lahtrisse
+function copy_asp_punktikirjeldus(fld)
+{
+  var markus = fld.closest('tr').find('textarea.asp-markus');
+  var punktid = parseFloat(fld.val().replace(',','.')) || 0;
+  var spunktid = String(punktid).replace('.',',');
+  var div = fld.closest('tr').find('div.asp-pkirj').filter(function(){
+        return $(this).attr('data-punktid')==spunktid;
+  });
+  if(div.length)
+     {
+        markus.val(div.text());
+        markus.prop('readonly', true);
+     }
+  else
+     {
+        markus.prop('readonly', false);
+     }
+}
+
+$(function(){
+  $('input[name$="toorpunktid"]').change(set_nullipohj).keyup(set_nullipohj);
+
+## jätame enne iframe sisse tõstmist meelde oma div_ty elemendi ID
+$('input.val-tp').each(function(){
+  var ty_divid = $(this).closest('div.div_ty').attr('id');
+  $(this).attr('ty_divid', ty_divid);
+});
+
+## antud toorpunktide jooksev kokkuliitmine
+$('input.val-tp').change(function(){
+  var ty_divid = $(this).attr('ty_divid');
+  var y_div = $('div.div_ty#' + ty_divid);
+  var total=0;
+  var flds_parent = y_div.find('input.val-tp,span.val-tp');
+  var flds_iframe = y_div.find('iframe').contents().find('input.val-tp,span.val-tp');
+  $.merge(flds_parent, flds_iframe).each(function(){
+     var v = ($(this).is('input') ? $(this).val() : $(this).text());
+     if(v != '')
+     {
+        var punktid = Number(v.replace(',','.'));
+        var fld_kaal = $(this).closest('tr').find('td.val-kaal');
+        if(fld_kaal.length) {
+            var kaal = Number(fld_kaal.text().replace(',','.'));
+            total += punktid * kaal;
+        } else {
+            total += punktid; 
+        }
+     }
+  });
+  y_div.find('.val-total-tp').text(fstr(total));
+  var koefitsient=Number(y_div.find('.val-koef').text().replace(',','.'));
+  y_div.find('.val-total-p').text(fstr(total*koefitsient));
+});
+
+
+## aspektipunktide muutmisel kopeerida aspekti punktide kirjeldus märkuse lahtrisse
+  $('input.asp-punktid').change(function(){ copy_asp_punktikirjeldus($(this)); })
+  .each(function(){ copy_asp_punktikirjeldus($(this)); });
+  
+  ## tõstame hinnete plokid väljastpoolt iframe sisse kysimuse vastuse juurde
+  copy_valuation_to_iframe($('form#form_save_responses'));
+});
+      </script>
+</%def>
+
+<%def name="footer_buttons()">
+% if not c.hindamiskogum.arvutihinnatav:
+<div class="m-2">
+<%
+  on_ehindamine = c.sooritus.testiosa.lahliik_kood == const.LAHLIIK_E or \
+      c.hindamiskogum.sisestuskogum and c.hindamiskogum.sisestuskogum.on_skannimine
+  disabled = bool(c.app_ekk)
+%>
+  % if not c.omahindamine:
+  ${h.submit(_("Lükka tagasi"), id='lykka', disabled=disabled, level=2)}
+  % endif
+  ${h.submit(_("Peata"), id='peata', disabled=disabled)}
+    % if on_ehindamine:
+  ${h.submit(_("Peata ja alusta järgmist"), id='peatajargmine', disabled=disabled)}
+    % endif
+
+  % if c.omahindamine or c.hindamine.komplekt_id:
+  ${h.submit(_("Kinnita hindamine"), id='lopeta', disabled=disabled)}
+   
+    % if on_ehindamine:
+  ${h.submit(_("Kinnita hindamine ja alusta järgmist"), id='lopetajargmine', disabled=disabled)}
+    % endif
+  % endif
+
+</div>
+% endif
+
+##% if c.ignore_ty_id:
+##${h.alert_notice(_("Hindajale ei kuvata {n} ülesannet, kus ei ole käsitsi hinnatavaid vastuseid").format(n=len(c.ignore_ty_id)), False)}
+##% endif
+</%def>
+
+<%def name="next_form()">
+## kasutatakse hindamisel järgmise töö valimise vormi jaoks
+## nuppe ei saa teiste nuppudega samasse ritta panna, sest siin on teine vorm
+% if not c.omahindamine and False:
+<br/>
+% if not c.app_ekk:
+${h.form(h.url('khindamine_vastajad', toimumisaeg_id=c.toimumisaeg.id,
+hindaja_id=c.hindaja_id), method='post')}
+% else:
+${h.form(h.url('hindamine_hindajavaade_vastajad', toimumisaeg_id=c.toimumisaeg.id,
+hindaja_id=c.hindaja_id), method='post')}
+% endif
+<% on_skannimine = c.hindamiskogum.sisestuskogum and c.hindamiskogum.sisestuskogum.on_skannimine %>
+ % if c.sooritus.testiosa.lahliik_kood == const.LAHLIIK_P and not on_skannimine:
+
+% if c.toimumisaeg.testimiskord.sisestus_isikukoodiga:
+% if request.is_ext():
+${_("Järgmine isikukood")}:
+% else:
+${_("Järgmine kasutajatunnus")}:
+% endif
+${h.text('isikukood', c.isikukood, size=12, pattern='\d{11}', class_=c.focus and 'initialfocus' or None)}
+<% if c.focus: c.focus = None %>
+% endif
+
+    ${_("Järgmise töö tähis")}:
+    ## kui on seatud URLi parameeter focus, siis järgmise tähise väli saab fookuse
+    ${h.text('tahised', c.tahised, maxlength=7, pattern='\d+-\d+', size=10,
+      class_=c.focus and 'initialfocus' or None)}
+    ${h.submit(_("Järgmine"), id='p_alusta')}
+ % else:
+    ${h.submit(_("Järgmine"), id='e_alusta')}
+ % endif
+
+${h.end_form()}
+% endif
+</%def>
+
+<%def name="tbl_hindamine_kriteeriumid()">
+## Hindamiskriteeriumitega hindamiskogumi pallide tabel
+<%
+  #prefix = 'hkr.'
+  kriteeriumid = list(c.hindamiskogum.hindamiskriteeriumid)
+  a_max_pallid = sum([kr.max_pallid for kr in kriteeriumid])
+%>
+   <table width="100%"  class="table vertmar">
+     <caption>${_("Hindamiskogumi hindamine hindamiskriteeriumite kaupa")}</caption>
+     <tr>
+       <th>${_("Aspekt")}</th>
+       <th>${_("Toorpunktid")}</th>
+       <th nowrap>${_("Max")}</th>
+       <th>${_("Kaal")}</th>
+       <th nowrap>${_("Null punkti põhjus")}</th>
+       <th width="70%">${_("Märkus sooritajale")}</th>
+     </tr>
+     % for n_ha, ha in enumerate(kriteeriumid):
+         <% 
+           krithinne = c.hindamine.get_kriteeriumihinne(ha.id) or None
+           a_prefix = 'kr-%d' % (n_ha)
+           #a_prefix = 'kr-%d' % (prefix, n_ha)
+         %>
+     <tr>
+       <td>${ha.aspekt_nimi}</td>
+       <td>
+         ${h.float5('%s.toorpunktid' % a_prefix, krithinne and  krithinne.s_toorpunktid, 
+         maxvalue=ha.max_pallid, class_='val-tp asp-punktid')}
+         ${h.hidden('%s.a_kood' % a_prefix, ha.aspekt_kood)}
+       </td>
+       <td>${h.fstr(ha.max_pallid)}</td>
+       <td class="val-kaal">${h.fstr(ha.kaal)}</td>
+       <td>
+         ${h.select('%s.nullipohj_kood' % a_prefix, 
+         krithinne and krithinne.nullipohj_kood, 
+         c.opt.klread_kood('NULLIPOHJ', empty=True, vaikimisi=krithinne and
+         krithinne.nullipohj_kood), 
+         wide=False,
+         disabled=not krithinne or not krithinne.toorpunktid==0)}
+       </td>
+       <td>
+         ${h.textarea('%s.markus' % a_prefix, krithinne and krithinne.markus, rows=2, class_='asp-markus')}
+         % if ha.pkirj_sooritajale:
+         % for pk in ha.kritkirjeldused:
+         <div style="display:none" class="asp-pkirj" data-punktid="${h.fstr(pk.punktid)}">${pk.kirjeldus and pk.kirjeldus.replace('\n','<br/>')}</div>
+         % endfor
+         % endif
+       </td>
+     </tr>
+     % endfor
+   </table>
+</%def>

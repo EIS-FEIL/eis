@@ -1,0 +1,21 @@
+-- võimalik lahendus andmebaasis logimiseks (ei ole kasutusel)
+-- CREATE OR REPLACE FUNCTION tr_log_koht() RETURNS TRIGGER AS $tr_log_koht$
+-- DECLARE field character varying(50);
+-- BEGIN
+-- -- koha tabeli muudatuste logimine
+-- FOR field IN SELECT column_name FROM information_schema.columns cols
+--     WHERE cols.table_name='koht' AND cols.table_schema='public'
+--     AND column_name NOT IN ('id','modifier','creator','modified','created')
+-- LOOP
+--     EXECUTE 'IF COALESCE(old.'||field||','''') != COALESCE(new.'||field||','''') THEN '
+--     || ' INSERT INTO kohalogi (modifier, modified, koht_id, vali, vana, uus) '
+--     || ' VALUES (new.modifier, current_timestamp, new.id, '''||field||''', old.'||field||', new.'||field||');'
+--     || ' END IF;';
+-- END LOOP;
+-- RETURN NULL;
+-- END;
+-- $tr_log_koht$ LANGUAGE plpgsql;
+
+-- CREATE TRIGGER tr_log_koht
+-- AFTER UPDATE ON koht
+--   FOR EACH ROW EXECUTE PROCEDURE tr_log_koht();

@@ -1,0 +1,118 @@
+Eksamite infosüsteem
+
+Failid
+------
+apache/ - Apache konfi näidis
+config.ini - näidis-konfifail
+development*.ini - Arenduskeskkonna konfifailid
+sql/ - SQL kood
+scripts/ - abiskriptid
+eis/ - pythoni moodul tõlgitava kasutajaliidesega osa kohta
+     forms/ - kasutajaliidese vormide sisendi valideerimisskeemid
+     handlers/ - kasutajaliidese kontrollerid
+          abi.py - abiinfo kuvamine
+          adapter.py - X-tee adapter
+          error.py - veaolukordade käsitlemine
+          index.py - avaleht
+          login.py - sisselogimine
+          admin/ - eksamikeskuse vaate administreerimine
+          avalik/ - avalik vaade
+               admin/ - soorituskoha administreerimine
+               lahendamine/ - avalike ülesannete lahendamine (testita)
+               testid/ - avaliku vaate testide koostamine
+               labiviimine/ - avaliku vaate testide läbiviimine
+               regamine/ - sooritajate registreerimine (ise)
+               nimekirjad/ - sooritajate registreerimine (kooli poolt)
+               sooritamine/ - kirjalike e-testide sooritamine
+               koolipsyhholoogid/ - koolipsühholoogitestide andmete haldamine
+               klabiviimine/ - kirjalike e-testide läbiviimine
+               shindamine/ - suuliste e-testide hindamine
+               khindamine/ - kirjalike testide e-hindamine
+               nousolekud/ - läbiviimise nõusolekud
+               opperyhmad/ - õpilaste rühmade haldamine õpetaja enda tarbeks 
+               protokollid/ - testi toimumise protokollid
+               testitulemused/ - klassi tulemuste statistika
+               toofailid/ - testitega seotud failide allalaadimine
+               tookogumikud/ - õpetaja töökogumike haldamine
+               toolaud/ - õpetaja töölaud
+               tulemused/ - oma tulemuste vaatamine
+               tunnistused/ - tunnistuste vaatamine               
+          ekk/ - eksamikeskuse vaade
+               ylesanded/ - ülesannete koostamine
+               testid/ - testide koostamine
+               regamine/ - testidele registreerimine
+               konsultatsioonid/ - konsultatsioonid
+               korraldamine/ - testide korraldamine
+               hindamine/ - testitööde hindamine
+               sisestamine/ - tööde, protokollide jm sisestamine
+               muud/ - vaided, erivajadused, tulemuste kinnitamine jms
+               otsingud/ - otsingud
+               statistika/ - aruanded
+               ylesandekogud/ - ülesandekogude kirjeldamine
+          minu/ - avaliku vaate kasutaja seadistused
+          pub/ - abitegevuste kontrollerid (nt valikväljade täitmine)
+     lib/ - baas- ja abifunktsioonid
+          menuitem.py - menüü koostamise universaalne klass
+          menu.py - EISi menüüvalikud
+          user.py - autenditud kasutaja andmed
+          base.py - baaskontroller
+          basegrid.py - loetelude salvestamise abikontroller
+          baseresource.py - tüüpilise ressurss-kontrolleri baaskontroller
+          block.py - ülesande sisuplokkide töötlemine ülesande koostamisel
+          blockentry.py - küsimuste vastuste sisestamine sisestajalt
+          blockresponse.py - ülesannete vastuste töötlemine
+          daemon.py - deemoni funktsionaalsus taustaprotsesside jaoks
+          exceptions.py - erindid
+          feedbackreport.py - tagasisidevormide funktsioonid
+          formulaenv.py - ülesannetes ja normipunktides kasutatavad valemid
+          helpers.py - abifunktsioonid kasutajaliidese mallides kasutamiseks
+          html_export.py - ülesande eksportimine kujundamiseks
+          mailer.py - e-posti saatmine
+          math2svg.py - matemaatiliste avaldiste teisendamine SVGsse
+          npcalc.py - testide normipunktid ja diagnoosiva testi parameetrid
+          paginate.py - loetelude pagineerimine kasutajaliideses
+          pangalink.py - pangalink
+          pdf/ - PDF mallid
+               pdfdoc.py - PDF dokumendi baasklass
+               pages_loader.py - PDF mallide importimine
+               *.py - konkreetsed PDF dokumendid
+               pages/ - PDF dokumentide mallid (EKK võib ise muuta)
+                     pdfutils.py - abifunktsioonid
+                     stylesheet.py - vorming
+                     DOK_MALL.py - dokumendi DOK mallid
+          qti.py - QTI eksport-import
+          qti_export.py - QTI eksport
+          qti_import.py - QTI import
+          requesthelpers.py - need abifunktsioonid mallides kasutamiseks, mis
+                            kasutavad request-objekti
+          resultentry.py - ülesannete vastuste ja hinnete sisestamine
+          resultstat.py - tulemuste statistika arvutamine
+          utils.py - üldised abifunktsioonid
+          validationerror.py - kasutajaliidese sisendi valideerimine
+          xtee/ - X-tee teenuste kasutamine
+               attachment.py - MIME kodeerimine ja manused
+               client.py - üldise SOAP kliendi baasklass
+               xteeclient.py - X-tee kliendi baasklass
+               simplexml.py -
+          xteeserver/ - X-tee teenuste pakkumine (adapterserveri teenused)
+               __init__.py - teenuste registreerimine
+               soapserver.py - sisendi ja väljundi SOAP-vormistamine
+               docwsdl.py - skript WSDList dokumentatsiooni genereerimiseks
+               *.py - igal teenusel oma fail
+     locale/ - kasutajaliidese tõlkefailid, sh FormEncode tõlge
+     model/ - andmemudel
+     routing.py - reeglid URLide ruutimiseks õige kontrollerini
+     scripts/ - moodulisisesed skriptid, mh andmete alglaadimiseks
+              create_db.py - andmebaasi loomine pythoni andmemudelist
+              initdata/ - püsiandmed pythoni koodina
+     static/ - staatilised failid
+     templates/ - kasutajaliidese mallid
+          avaleht.mako - avaleht
+          admin/ - eksamikeskuse vaate administraatori mallid
+          avalik/ - avaliku vaate mallid
+          ekk/ - eksamikeskuse vaate mallid
+          eksam/ - kohaliku eksamiserveri mallid
+          minu/ - avaliku vaate kasutaja seadistuste mallid
+          sisuplokk/ - ülesannete sisuplokkide mallid
+          mail/ - e-posti kirjade maillid
+

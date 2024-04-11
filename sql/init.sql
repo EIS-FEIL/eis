@@ -1,0 +1,11 @@
+\i init/asukohamaarus.sql
+--\i init/abivahend.sql
+\i init/klassifikaator.sql
+\i init/klrida.sql
+\i init/piirkond.sql
+\i init/koht.sql
+\i init/kasutajaoigus.sql
+\i init/kasutajagrupp.sql
+\i init/kasutajagrupp_oigus.sql
+\i init/kasutaja.sql
+\i init/kasutajaroll.sql
